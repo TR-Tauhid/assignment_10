@@ -1,11 +1,24 @@
 import React from 'react';
+import { NavLink } from 'react-router';
 
 const Navbar = () => {
     return (
-        <div>
-            <h1>Navbar here</h1>
+        <div className=''>
+            <div>
+                <img src="logo.png" alt="logo" />
+            </div>
+            <nav>
+                <NavLink to="/">Home</NavLink>
+                <NavLink to="/allTouristSpot">AllTouristSpot</NavLink>
+                <NavLink to="/addTouristSpot">AddTouristSpot</NavLink>
+                <NavLink to="/myList">My List</NavLink>
+                <NavLink to="/login">Login</NavLink>
+            </nav>
+            <div>
+
+            </div>
         </div>
     );
 };
 
-export default Navbar;
+export default Navbar
