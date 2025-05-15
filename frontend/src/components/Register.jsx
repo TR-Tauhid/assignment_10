@@ -1,20 +1,23 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { updateProfile } from "firebase/auth";
+import { useNavigate } from "react-router";
 
 const Login = () => {
   const authValue = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const { createUserWithEmailPass } = authValue;
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-    // const name = formData.get("name");
+    const name = formData.get("name");
     const email = formData.get("email");
+    const photoURL = formData.get("photoURL");
     const password = formData.get("password");
     const conformPassword = formData.get("conformPassword");
-    // const photoURL = formData.get("photoURL");
-
+    
     if (password !== conformPassword) {
       alert("Password and confirm password do not match");
       return;
@@ -40,8 +43,17 @@ const Login = () => {
       return;
     }
 
-    createUserWithEmailPass(email, password).then((result) => {
-      alert("User created successfully", result.user);
+    createUserWithEmailPass(email, password, name, photoURL)
+      .then((result) => {
+        const user = result.user;
+        return updateProfile(user, {
+          displayName: name,
+          photoURL: photoURL,
+        })
+        .then(() => { navigate(-1)})
+        .catch((error) => {
+          console.error(error);
+        });
     });
   };
 

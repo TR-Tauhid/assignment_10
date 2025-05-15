@@ -10,7 +10,7 @@ const AuthProvider = ({children}) => {
         return createUserWithEmailAndPassword(auth, email, password)
     };
 
-    const signInWithEmail = (email, password) => {
+    const signInWithEmailPass = (email, password) => {
         return signInWithEmailAndPassword(auth, email, password);
     };
 
@@ -39,7 +39,7 @@ const AuthProvider = ({children}) => {
 
 const authInfo = {
     createUserWithEmailPass,
-    signInWithEmail,
+    signInWithEmailPass,
     googleSignIn,
     facebookSignIn,
     user,
