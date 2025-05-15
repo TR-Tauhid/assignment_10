@@ -7,7 +7,7 @@ const Login = () => {
   const authValue = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const { createUserWithEmailPass } = authValue;
+  const { createUserWithEmailPass, notify } = authValue;
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -17,44 +17,52 @@ const Login = () => {
     const photoURL = formData.get("photoURL");
     const password = formData.get("password");
     const conformPassword = formData.get("conformPassword");
-    
+
     if (password !== conformPassword) {
-      alert("Password and confirm password do not match");
+      notify("Password and conform password do not match...!!!", "error");
       return;
     }
 
     if (password.length < 6) {
-      alert("Password must be at least 6 characters long");
+      notify("Password must be at least 6 characters long...!!!", "error");
       return;
     }
 
     if (password.length > 20) {
-      alert("Password must be at most 20 characters long");
+      notify("Password must be at most 20 characters long...!!!", "error");
       return;
     }
 
     if (!/[A-Z]/.test(password)) {
-      alert("Password must contain at least one uppercase letter");
+      notify(
+        "Password must contain at least one uppercase letter...!!!",
+        "error"
+      );
       return;
     }
 
     if (!/[a-z]/.test(password)) {
-      alert("Password must contain at least one lowercase letter.");
+      notify(
+        "Password must contain at least one lowercase letter...!!!",
+        "error"
+      );
       return;
     }
 
     createUserWithEmailPass(email, password, name, photoURL)
-      .then((result) => {
+      .then(async (result) => {
         const user = result.user;
-        return updateProfile(user, {
+        await updateProfile(user, {
           displayName: name,
           photoURL: photoURL,
-        })
-        .then(() => { navigate(-1)})
-        .catch((error) => {
-          console.error(error);
         });
-    });
+        navigate(-1);
+        notify("Registration Successful...!!!", "success");
+      })
+      .catch((error) => {
+        console.error(error);
+        notify(error.message, "error");
+      });
   };
 
   return (
@@ -123,10 +131,7 @@ const Login = () => {
                       </a>
                     </div>
                   </div>
-                  <button
-                    className="btn btn-neutral w-full mt-4"
-                    type="submit"
-                  >
+                  <button className="btn btn-neutral w-full mt-4" type="submit">
                     Register
                   </button>
                 </form>

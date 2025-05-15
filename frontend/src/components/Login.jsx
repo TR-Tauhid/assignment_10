@@ -7,10 +7,10 @@ const Login = () => {
   const authValue = useContext(AuthContext);
   const navigete = useNavigate();
 
-  const { signInWithEmailPass, googleSignIn, facebookSignIn } = authValue;
+  const { signInWithEmailPass, googleSignIn, facebookSignIn, notify } = authValue;
 
   const handleFormSubmit = (e) => {
-    console.log("Form submitted");
+
     e.preventDefault();
     const form = new FormData(e.target);
     const email = form.get("email");
@@ -18,20 +18,23 @@ const Login = () => {
     signInWithEmailPass(email, password)
       .then(() => {
         navigete(-1);
+        notify("Login Successful...!!!", "success");
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        notify(error.message, "error");
+      });
   };
 
   const handleGoogleBtn = () => {
     googleSignIn()
-      .then(() => { navigete(-1) })
-      .catch((error) => console.error(error));
-  };
-
-  const handleFacebookBtn =() => {
-    facebookSignIn()
-      .then(() => { navigete(-1) })
-      .catch(error => console.error(error));
+      .then(() => { navigete(-1); notify("Login Successful...!!!", "success") })
+      .catch((error) => notify(error.message, "error"));
+    };
+    
+    const handleFacebookBtn =() => {
+      facebookSignIn()
+      .then(() => { navigete(-1); notify("Login Successful...!!!", "success") })
+      .catch((error) => notify(error.message, "error"));
   }
 
   return (
