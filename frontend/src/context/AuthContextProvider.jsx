@@ -6,7 +6,7 @@ import { AuthContext } from './AuthContext';
 const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null);
     
-    const createUserWithEmail = (email, password) => {
+    const createUserWithEmailPass = (email, password) => {
         return createUserWithEmailAndPassword(auth, email, password)
     };
 
@@ -38,7 +38,7 @@ const AuthProvider = ({children}) => {
     }
 
 const authInfo = {
-    createUserWithEmail,
+    createUserWithEmailPass,
     signInWithEmail,
     googleSignIn,
     facebookSignIn,

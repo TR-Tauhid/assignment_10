@@ -6,13 +6,43 @@ const Login = () => {
 
   const { createUserWithEmailPass } = authValue;
 
-  const handleRegisterBtn = () => {
-    createUserWithEmailPass(email, password)
-      .then((result) => {
-        const user = result.user;
-        console.log(user);
-      })
-      .catch((error) => console.error(error));
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    // const name = formData.get("name");
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const conformPassword = formData.get("conformPassword");
+    // const photoURL = formData.get("photoURL");
+
+    if (password !== conformPassword) {
+      alert("Password and confirm password do not match");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("Password must be at least 6 characters long");
+      return;
+    }
+
+    if (password.length > 20) {
+      alert("Password must be at most 20 characters long");
+      return;
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      alert("Password must contain at least one uppercase letter");
+      return;
+    }
+
+    if (!/[a-z]/.test(password)) {
+      alert("Password must contain at least one lowercase letter.");
+      return;
+    }
+
+    createUserWithEmailPass(email, password).then((result) => {
+      alert("User created successfully", result.user);
+    });
   };
 
   return (
@@ -29,19 +59,46 @@ const Login = () => {
 
           <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
             <div className="card-body">
-              <fieldset className="fieldset space-y-3.5">
-                <form action="">
-                  <label className="label">Email</label>
+              <fieldset className="fieldset ">
+                <form onSubmit={handleFormSubmit}>
+                  <label className="label mb-1 mt-4">Name*</label>
+                  <input
+                    type="name"
+                    name="name"
+                    className="input w-full"
+                    placeholder="Enter your Name"
+                    required
+                  />
+                  <label className="label mb-1 mt-4">Email*</label>
                   <input
                     type="email"
+                    name="email"
                     className="input w-full"
                     placeholder="Email"
+                    required
                   />
-                  <label className="label">Password</label>
+                  <label className="label mb-1 mt-4">Photo URL</label>
+                  <input
+                    type="url"
+                    name="photoURL"
+                    className="input w-full"
+                    placeholder="Photo URL"
+                  />
+                  <label className="label mb-1 mt-4">Password*</label>
                   <input
                     type="password"
+                    name="password"
                     className="input w-full"
                     placeholder="Password"
+                    required
+                  />
+                  <label className="label mb-1 mt-4">Conform Password*</label>
+                  <input
+                    type="conformPassword"
+                    name="conformPassword"
+                    className="input w-full"
+                    placeholder="Re-enter your Password"
+                    required
                   />
                   <div>
                     <div className="flex gap-6 mt-4">
@@ -55,8 +112,7 @@ const Login = () => {
                     </div>
                   </div>
                   <button
-                    onClick={handleRegisterBtn}
-                    className="btn btn-neutral mt-4"
+                    className="btn btn-neutral w-full mt-4"
                     type="submit"
                   >
                     Register
