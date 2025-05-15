@@ -19,7 +19,6 @@ export default [
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      node: true
     },
     rules: {
       ...js.configs.recommended.rules,
