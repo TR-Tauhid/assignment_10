@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const authValue = useContext(AuthContext);
   const { user, logOut } = authValue;
 
@@ -48,6 +48,9 @@ const Navbar = () => {
             <li>
               <NavLink to="/myList">My List</NavLink>
             </li>
+            <li>
+              <NavLink to="/viewDetails">View Details</NavLink>
+            </li>
           </ul>
         </div>
         <a className="btn btn-ghost text-xl">daisyUI</a>
@@ -65,6 +68,9 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink to="/myList">My List</NavLink>
+          </li>
+          <li>
+            <NavLink to="/viewDetails">View Details</NavLink>
           </li>
         </ul>
       </div>
@@ -86,7 +92,10 @@ const Navbar = () => {
                   tabIndex={0}
                   className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-24 lg:w-52 p-2"
                 >
-                  <li onClick={handleLogoutBtn} className="border-white border-2 cursor-pointer rounded-lg lg:p-2 flex items-center">
+                  <li
+                    onClick={handleLogoutBtn}
+                    className="border-white border-2 cursor-pointer rounded-lg lg:p-2 flex items-center"
+                  >
                     <a>Logout</a>
                   </li>
                 </ul>

@@ -80,6 +80,8 @@ const Login = () => {
           <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
             <div className="card-body">
               <fieldset className="fieldset ">
+                  <legend className="fieldset-legend">Register Now...!!!</legend>
+
                 <form onSubmit={handleFormSubmit}>
                   <label className="label mb-1 mt-4">Name*</label>
                   <input

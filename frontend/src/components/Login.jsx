@@ -2,15 +2,14 @@ import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 
-
 const Login = () => {
   const authValue = useContext(AuthContext);
   const navigete = useNavigate();
 
-  const { signInWithEmailPass, googleSignIn, facebookSignIn, notify } = authValue;
+  const { signInWithEmailPass, googleSignIn, facebookSignIn, notify } =
+    authValue;
 
   const handleFormSubmit = (e) => {
-
     e.preventDefault();
     const form = new FormData(e.target);
     const email = form.get("email");
@@ -27,15 +26,21 @@ const Login = () => {
 
   const handleGoogleBtn = () => {
     googleSignIn()
-      .then(() => { navigete(-1); notify("Login Successful...!!!", "success") })
+      .then(() => {
+        navigete(-1);
+        notify("Login Successful...!!!", "success");
+      })
       .catch((error) => notify(error.message, "error"));
-    };
-    
-    const handleFacebookBtn =() => {
-      facebookSignIn()
-      .then(() => { navigete(-1); notify("Login Successful...!!!", "success") })
+  };
+
+  const handleFacebookBtn = () => {
+    facebookSignIn()
+      .then(() => {
+        navigete(-1);
+        notify("Login Successful...!!!", "success");
+      })
       .catch((error) => notify(error.message, "error"));
-  }
+  };
 
   return (
     <div>
@@ -53,8 +58,10 @@ const Login = () => {
           <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
             <div className="card-body">
               <fieldset className="fieldset space-y-3.5">
+                <legend className="fieldset-legend">Login</legend>
+
                 <form onSubmit={handleFormSubmit}>
-                  <label className="label">Email</label>
+                  <label className="label mb-1 mt-4">Email</label>
                   <input
                     type="email"
                     name="email"
@@ -62,11 +69,11 @@ const Login = () => {
                     placeholder="Email"
                     required
                   />
-                  <label className="label">Password</label>
+                  <label className="label mb-1 mt-4">Password</label>
                   <input
                     type="password"
                     name="password"
-                    className="input w-full"
+                    className="input w-full mb-4"
                     placeholder="Password"
                     required
                   />
@@ -90,7 +97,10 @@ const Login = () => {
               <h3 className="text-center">or</h3>
 
               <div className="flex flex-col gap-4 mt-4">
-                <button onClick={handleGoogleBtn} className="btn bg-white text-black border-[#e5e5e5]">
+                <button
+                  onClick={handleGoogleBtn}
+                  className="btn bg-white text-black border-[#e5e5e5]"
+                >
                   <svg
                     aria-label="Google logo"
                     width="16"
@@ -121,7 +131,10 @@ const Login = () => {
                   Login with Google
                 </button>
 
-                <button onClick={handleFacebookBtn} className="btn bg-[#1A77F2] text-white border-[#005fd8]">
+                <button
+                  onClick={handleFacebookBtn}
+                  className="btn bg-[#1A77F2] text-white border-[#005fd8]"
+                >
                   <svg
                     aria-label="Facebook logo"
                     width="16"
