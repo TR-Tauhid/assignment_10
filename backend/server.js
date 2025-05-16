@@ -1,7 +1,7 @@
 import express, { response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { MongoClient, ServerApiVersion, ObjectId  } from "mongodb";
+import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
 
 dotenv.config();
 
@@ -92,15 +92,20 @@ app.get("/allTouristSpot", async (req, res) => {
   }
 });
 
-app.patch("/addTouristSpot/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
-    const touristSpotCollection = db.collection("touristSpots");
+app.get("/myList", async (req, res) => {
+ try {
+    const allTouristSpotData = await db
+      .collection("touristSpots")
+      .find({})
+      .toArray();
+    res.status(200).json(allTouristSpotData);
   } catch (error) {
-    console.error("Error fetching tourist spot details:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error fetching tourist spots:", error);
+    res.status(500).json({ message: `${error.message}` });
   }
 });
+
+
 
 app.get("/viewDetails/:id", async (req, res) => {
   try {
@@ -118,16 +123,14 @@ app.get("/viewDetails/:id", async (req, res) => {
       _id: new ObjectId(id),
     });
 
-   
     if (touristSpot) {
       res.status(200).json(touristSpot);
     } else {
       res.status(404).json({ message: "Tourist spot not found" });
     }
   } catch (error) {
-   
     console.error("Error fetching tourist spot details:", error);
-   
+
     res.status(500).json({ message: "Internal server error" });
   }
 });

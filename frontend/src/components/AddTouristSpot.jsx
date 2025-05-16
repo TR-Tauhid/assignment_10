@@ -4,7 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 
 const AddTouristSpot = () => {
   const authValue = useContext(AuthContext);
-  const { notify } = authValue;
+  const { notify, user } = authValue;
 
   const handleTouristForm = async (e) => {
     e.preventDefault();
@@ -19,6 +19,7 @@ const AddTouristSpot = () => {
       season: form.get("season"),
       travelTime: form.get("travelTime"),
       totalVisitors: form.get("totalVisitors"),
+      uid: user.uid,
     };
 
     try {

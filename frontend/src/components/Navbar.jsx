@@ -48,9 +48,9 @@ const Navbar = () => {
             <li>
               <NavLink to="/myList">My List</NavLink>
             </li>
-            <li>
+            {/* <li>
               <NavLink to="/viewDetails">View Details</NavLink>
-            </li>
+            </li> */}
           </ul>
         </div>
         <a className="btn btn-ghost text-xl">daisyUI</a>
@@ -69,9 +69,9 @@ const Navbar = () => {
           <li>
             <NavLink to="/myList">My List</NavLink>
           </li>
-          <li>
+          {/* <li>
             <NavLink to="/viewDetails">View Details</NavLink>
-          </li>
+          </li> */}
         </ul>
       </div>
       <div>

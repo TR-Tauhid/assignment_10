@@ -22,7 +22,7 @@ let router = createBrowserRouter([
       }
       return res.json();
     },
-    errorElement: <ErrorPage />,
+    // errorElement: <ErrorPage />,
 
     children: [
       {
@@ -46,7 +46,26 @@ let router = createBrowserRouter([
         element: <Register />,
       },
       {
-        path: "myList",
+        path: "/myList",
+        loader: async () => {
+          try {
+            const res = await fetch(
+              `http://localhost:5000/myList/`
+            );
+            if (!res.ok) {
+              const errorData = await res.json().catch(() => ({
+                message: res.statusText || "Unknown server error",
+              }));
+              throw new Error(errorData.message || "Failed to fetch data");
+            }
+            return await res.json();
+          } catch (error) {
+            console.error("Error in viewDetails loader:", error);
+            throw new Error(
+              "Could not load tourist spot details: " + error.message
+            );
+          }
+        },
         element: <MyList />,
       },
       {
@@ -56,7 +75,6 @@ let router = createBrowserRouter([
             const res = await fetch(
               `http://localhost:5000/viewDetails/${params.id}`
             );
-
             if (!res.ok) {
               const errorData = await res.json().catch(() => ({
                 message: res.statusText || "Unknown server error",
