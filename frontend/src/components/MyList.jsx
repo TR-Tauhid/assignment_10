@@ -1,10 +1,12 @@
 import React, { useContext, useState } from "react";
 import { NavLink, useLoaderData } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import swal from "sweetalert";
 
 const MyList = () => {
   const touristSpotsData = useLoaderData();
   const [touristSpots, setTouristSpot] = useState(touristSpotsData);
+  const [editTouristSpot, setEditTouristSpot] = useState();
   const authValue = useContext(AuthContext);
   const { user, notify } = authValue;
   const userID = user?.uid;
@@ -12,48 +14,106 @@ const MyList = () => {
   const handleUpdateFormSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
-    const touristDetails = {
-      photoURL: form.get("photoURL"),
-      spotNames: form.get("spotNames"),
-      country: form.get("country"),
-      location: form.get("location"),
-      description: form.get("description"),
-      averageCost: form.get("averageCost"),
-      season: form.get("season"),
-      travelTime: form.get("travelTime"),
-      totalVisitors: form.get("totalVisitors"),
-      uid: user.uid,
+    const updatedTouristSpotDetail = {
+      ...(String(editTouristSpot.photoURL) !== String(form.get("photoURL")) && {
+        photoURL: form.get("photoURL"),
+      }),
+      ...(String(editTouristSpot.spotNames) !==
+        String(form.get("spotNames")) && { spotNames: form.get("spotNames") }),
+      ...(String(editTouristSpot.country) !== String(form.get("country")) && {
+        country: form.get("country"),
+      }),
+      ...(String(editTouristSpot.location) !== String(form.get("location")) && {
+        location: form.get("location"),
+      }),
+      ...(String(editTouristSpot.description) !==
+        String(form.get("description")) && {
+        description: form.get("description"),
+      }),
+      ...(String(editTouristSpot.averageCost) !==
+        String(form.get("averageCost")) && {
+        averageCost: form.get("averageCost"),
+      }),
+      ...(String(editTouristSpot.season) !== String(form.get("season")) && {
+        season: form.get("season"),
+      }),
+      ...(String(editTouristSpot.travelTime) !==
+        String(form.get("travelTime")) && {
+        travelTime: form.get("travelTime"),
+      }),
+      ...(String(editTouristSpot.totalVisitors) !==
+        String(form.get("totalVisitors")) && {
+        totalVisitors: form.get("totalVisitors"),
+      }),
     };
 
     try {
-      const res = await fetch("http://localhost:5000/myList", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "Application/json",
-        },
-        body: JSON.stringify(touristDetails),
+      const willDelete = await swal({
+        title: "Are you sure?",
+        text: "Once updated, you will not be able to recover this tourist info...!!!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
       });
-      if (res.ok) {
-        notify(`Tourist Spot ${res.statusText} Successfully...!!! `, "success");
+      if (willDelete) {
+        const res = await fetch(
+          `http://localhost:5000/myList/${editTouristSpot._id}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "Application/json",
+            },
+            body: JSON.stringify(updatedTouristSpotDetail),
+          }
+        );
+        if (res.ok) {
+          notify(`Tourist Spot updated Successfully...!!! `, "success");
+        } else {
+          notify(`Failed to add tourist spot: ${res.statusText}`, "error");
+        }
+        swal("Tourist Spot updated Successfully...!!!", {
+          icon: "success",
+        });
       } else {
-        notify(`Failed to add tourist spot: ${res.statusText}`, "error");
+        swal("Tourist Spot is not updated ...!!!");
       }
     } catch (error) {
-      notify(`Failed to add tourist spot: ${error.message}`, "error");
+      notify(`Failed to update tourist spot: ${error.message}`, "error");
     }
+  };
+
+  const handleEditBtn = (id) => {
+    const arr = touristSpots.find((touristSpot) => touristSpot._id === id);
+    setEditTouristSpot(arr);
   };
 
   const handleDeleteBtn = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/myList/${id}`, {
-      method: "DELETE",
-    })
+      const willDelete = await swal({
+        title: "Are you sure?",
+        text: "Once DELETED, you will not be able to recover this tourist spot information file!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      });
+      if (willDelete) {
+        const res = await fetch(`http://localhost:5000/myList/${id}`, {
+          method: "DELETE",
+        });
         const data = await res.json();
         if (data.deletedCount > 0) {
           notify("The tourist spot has been deleted...!!!", "success");
-          setTouristSpot(touristSpots.filter((touristSpot) => touristSpot._id !== id))
+          swal("Your tourist spot has been deleted!", {
+            icon: "success",
+          });
+          setTouristSpot(
+            touristSpots.filter((touristSpot) => touristSpot._id !== id)
+          );
+        } else {
+          swal("Your tourist spot info is safe!");
         }
-    }catch(err) {
+      }
+    } catch (err) {
       notify(err.message, "error");
     }
   };
@@ -66,10 +126,18 @@ const MyList = () => {
             touristSpot.uid === userID && (
               <div key={index} className="card bg-base-100 w-96 shadow-sm">
                 <div className="card-body">
-                  <h2 className="card-title">{touristSpot.name}</h2>
-                  <p>
-                    {touristSpot.description}
-                  </p>
+                  <div className="card-body">
+                    <h1>{touristSpot.spotNames}</h1>
+                    <h1>{touristSpot.country}</h1>
+                    <h1>{touristSpot.location}</h1>
+                    <h1>{touristSpot.description}</h1>
+                    <h1>{touristSpot.averageCost}</h1>
+                    <h1>{touristSpot.season}</h1>
+                    <h1>{touristSpot.travelTime}</h1>
+                    <h1>{touristSpot.totalVisitors}</h1>
+                    <h1>{touristSpot.email}</h1>
+                    <h1>{touristSpot.name}</h1>
+                  </div>
                 </div>
                 <figure>
                   <img src={touristSpot.photoURL} alt={touristSpot.name} />
@@ -79,18 +147,21 @@ const MyList = () => {
                 <div>
                   <button
                     className="btn"
-                    onClick={() =>
-                      document.getElementById("my_modal_1").showModal()
-                    }
+                    onClick={() => {
+                      document.getElementById("my_modal_1").showModal();
+                      handleEditBtn(touristSpot._id);
+                    }}
                   >
                     Edit
                   </button>
+
                   <button
                     onClick={() => handleDeleteBtn(touristSpot._id)}
                     className="btn btn-warning bg-red-700 text-white border-amber-50 border-2"
                   >
                     Delete{" "}
                   </button>
+
                   <dialog id="my_modal_1" className="modal ">
                     <div className="modal-box w-full">
                       <div>
@@ -218,20 +289,19 @@ const MyList = () => {
                               <span>Total Visitors</span>
                             </label>
                             <button
-                              onClick={() =>
-                                document.getElementById("my_modal_1").close()
-                              }
+                              onClick={() => {
+                                document.getElementById("my_modal_1").close();
+                              }}
                               type="submit"
                               className="btn btn-primary w-full mt-4"
                             >
-                              Update Tourist Spot
+                              Update
                             </button>
                           </fieldset>
                         </form>
                       </div>
                       <div className="modal-action">
                         <form method="dialog" className="w-11/12 mx-auto">
-                          {/* if there is a button in form, it will close the modal */}
                           <button className="btn btn-primary w-full">
                             Close
                           </button>

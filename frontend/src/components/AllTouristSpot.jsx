@@ -31,12 +31,16 @@ const AllTouristSpot = () => {
         <NavLink to={`/viewDetails/${touristSpot._id} `} key={index}>
           <div key={index} className="card bg-base-100 w-96 shadow-sm">
             <div className="card-body">
-              <h2 className="card-title">{touristSpot.name}</h2>
-              <h2 className="card-title">{touristSpot.email}</h2>
-              <p>
-                A card component has a figure, a body part, and inside body
-                there are title and actions parts
-              </p>
+              <h1>{touristSpot.spotNames}</h1>
+              <h1>{touristSpot.country}</h1>
+              <h1>{touristSpot.location}</h1>
+              <h1>{touristSpot.description}</h1>
+              <h1>{touristSpot.averageCost}</h1>
+              <h1>{touristSpot.season}</h1>
+              <h1>{touristSpot.travelTime}</h1>
+              <h1>{touristSpot.totalVisitors}</h1>
+              <h1>{touristSpot.email}</h1>
+              <h1>{touristSpot.name}</h1>
             </div>
             <figure>
               <img

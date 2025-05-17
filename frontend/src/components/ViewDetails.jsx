@@ -13,6 +13,8 @@ const ViewDetails = () => {
     description,
     spotNames,
     photoURL,
+    name,
+    email
   } = touristSpot;
   return (
     <div>
@@ -22,6 +24,8 @@ const ViewDetails = () => {
         </figure>
         <div className="card-body">
           <h2 className="card-title">{spotNames}</h2>
+          <p>{name}</p>
+          <p>{email}</p>
           <p>{description}</p>
           <p>{averageCost}</p>
           <p>{country}</p>

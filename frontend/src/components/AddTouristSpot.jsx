@@ -19,6 +19,8 @@ const AddTouristSpot = () => {
       season: form.get("season"),
       travelTime: form.get("travelTime"),
       totalVisitors: form.get("totalVisitors"),
+      email: form.get("email"),
+      name: form.get("name"),
       uid: user.uid,
     };
 
@@ -115,7 +117,7 @@ const AddTouristSpot = () => {
           </label>
 
           <select name="season" defaultValue="Select Season" className="select">
-            <option disabled={true}>Select Season</option>
+            <option disabled={true}>Select Seasonality</option>
             <option value={"Summer"}>Summer</option>
             <option value={"Rainy"}>Rainy</option>
             <option value={"Autumn"}>Autumn</option>
@@ -132,7 +134,7 @@ const AddTouristSpot = () => {
               placeholder="Travel Time in Hours"
               required
             />
-            <span>Travel Time in Hours</span>
+            <span>Travel Time in Days</span>
           </label>
 
           <label className="floating-label">
@@ -143,7 +145,27 @@ const AddTouristSpot = () => {
               placeholder="Total Visitors"
               required
             />
-            <span>Total Visitors</span>
+            <span>Total Visitors Per Year</span>
+          </label>
+            <label className="floating-label">
+            <input
+              type="email"
+              name="email"
+              className="input"
+              placeholder="User Email"
+              required
+            />
+            <span>User Email</span>
+          </label>
+            <label className="floating-label">
+            <input
+              type="text"
+              name="name"
+              className="input"
+              placeholder="User Name"
+              required
+            />
+            <span>User Name</span>
           </label>
           <button type="submit" className="btn btn-primary w-full mt-4">
             Add Tourist Spot

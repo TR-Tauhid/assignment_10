@@ -38,7 +38,6 @@ async function run() {
   try {
     await client.connect();
     await client.db("admin").command({ ping: 1 });
-    
 
     app.get("/", (req, res) => {
       res.send("Server is running...");
@@ -49,7 +48,7 @@ async function run() {
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
 
-    const touristSpotCollection = db.collection("touristSpots")
+    const touristSpotCollection = db.collection("touristSpots");
 
     app.post("/addTouristSpot", async (req, res) => {
       const touristDetails = req.body;
@@ -83,31 +82,43 @@ async function run() {
 
     app.delete("/myList/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id : new ObjectId(id)};
+      const query = { _id: new ObjectId(id) };
       const result = await touristSpotCollection.deleteOne(query);
       res.send(result);
     });
 
+    app.patch("/myList/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedTouristSpot = req.body;
+      const filter = { _id: new ObjectId(id)};
+      const option = { upsert: false }
+      const item = {
+        $set: {
+          ...updatedTouristSpot
+        }
+      };
+      const result = await touristSpotCollection.updateOne(filter, item, option);
+      res.send(result);
+    });
+
     app.get("/viewDetails/:id", async (req, res) => {
-        const id = req.params.id;
+      const id = req.params.id;
 
-        if (!ObjectId.isValid(id)) {
-          return res
-            .status(400)
-            .json({ message: "Invalid ID format. Must be a valid ObjectId." });
-        }
+      if (!ObjectId.isValid(id)) {
+        return res
+          .status(400)
+          .json({ message: "Invalid ID format. Must be a valid ObjectId." });
+      }
 
+      const touristSpot = await touristSpotCollection.findOne({
+        _id: new ObjectId(id),
+      });
 
-
-        const touristSpot = await touristSpotCollection.findOne({
-          _id: new ObjectId(id),
-        });
-
-        if (touristSpot) {
-          res.status(200).json(touristSpot);
-        } else {
-          res.status(404).json({ message: "Tourist spot not found" });
-        }
+      if (touristSpot) {
+        res.status(200).json(touristSpot);
+      } else {
+        res.status(404).json({ message: "Tourist spot not found" });
+      }
     });
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
@@ -116,5 +127,5 @@ async function run() {
 }
 run().catch(console.dir);
 app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
+  console.log(`Server is running on port ${PORT}`);
+});
