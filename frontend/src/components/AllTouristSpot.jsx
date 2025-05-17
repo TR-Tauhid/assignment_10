@@ -1,12 +1,11 @@
 import React from "react";
-import { useState, useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { useState } from "react";
 import { useEffect } from "react";
 import { NavLink } from "react-router";
+import {useAuth} from "../context/AuthContext";
 
 const AllTouristSpot = () => {
-  const authValue = useContext(AuthContext);
-  const { notify } = authValue;
+  const { notify } = useAuth();
   const [touristSpots, setTouristSpots] = useState([]);
   const handleTouristSpots = async () => {
     try {

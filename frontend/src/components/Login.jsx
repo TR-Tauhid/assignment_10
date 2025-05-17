@@ -1,13 +1,12 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import {useAuth} from "../context/AuthContext";
 import { useNavigate } from "react-router";
 
 const Login = () => {
-  const authValue = useContext(AuthContext);
   const navigete = useNavigate();
 
   const { signInWithEmailPass, googleSignIn, facebookSignIn, notify } =
-    authValue;
+    useAuth();
 
   const handleFormSubmit = (e) => {
     e.preventDefault();

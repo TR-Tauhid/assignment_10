@@ -1,14 +1,13 @@
-import React, { useContext, useState } from "react";
+import { React, useState } from "react";
 import { NavLink, useLoaderData } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
 import swal from "sweetalert";
+import { useAuth } from "../context/AuthContext";
 
 const MyList = () => {
   const touristSpotsData = useLoaderData();
   const [touristSpots, setTouristSpot] = useState(touristSpotsData);
   const [editTouristSpot, setEditTouristSpot] = useState();
-  const authValue = useContext(AuthContext);
-  const { user, notify } = authValue;
+  const { user, notify } = useAuth();
   const userID = user?.uid;
 
   const handleUpdateFormSubmit = async (e) => {

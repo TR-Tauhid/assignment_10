@@ -1,10 +1,8 @@
 import React from "react";
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const AddTouristSpot = () => {
-  const authValue = useContext(AuthContext);
-  const { notify, user } = authValue;
+  const { notify, user } = useAuth();
 
   const handleTouristForm = async (e) => {
     e.preventDefault();
@@ -44,7 +42,10 @@ const AddTouristSpot = () => {
 
   return (
     <div className="w-full ">
-      <form onSubmit={handleTouristForm} className="w-1/2 flex justify-center mx-auto">
+      <form
+        onSubmit={handleTouristForm}
+        className="w-1/2 flex justify-center mx-auto"
+      >
         <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4 gap-4 grow flex flex-col">
           <legend className="fieldset-legend">Add Tourist Spot</legend>
 
@@ -147,7 +148,7 @@ const AddTouristSpot = () => {
             />
             <span>Total Visitors Per Year</span>
           </label>
-            <label className="floating-label">
+          <label className="floating-label">
             <input
               type="email"
               name="email"
@@ -157,7 +158,7 @@ const AddTouristSpot = () => {
             />
             <span>User Email</span>
           </label>
-            <label className="floating-label">
+          <label className="floating-label">
             <input
               type="text"
               name="name"

@@ -1,11 +1,10 @@
-import React, { useContext } from "react";
 import { NavLink, useNavigate } from "react-router";
-import { AuthContext } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const authValue = useContext(AuthContext);
-  const { user, logOut } = authValue;
+
+  const { user, logOut } = useAuth();
 
   const handleLogoutBtn = () => {
     logOut().then(() => navigate("/"));
@@ -48,9 +47,6 @@ const Navbar = () => {
             <li>
               <NavLink to="/myList">My List</NavLink>
             </li>
-            {/* <li>
-              <NavLink to="/viewDetails">View Details</NavLink>
-            </li> */}
           </ul>
         </div>
         <a className="btn btn-ghost text-xl">daisyUI</a>

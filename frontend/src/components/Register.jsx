@@ -1,13 +1,12 @@
-import React, { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import React from "react";
+import { useAuth } from "../context/AuthContext";
 import { updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router";
 
 const Login = () => {
-  const authValue = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const { createUserWithEmailPass, notify } = authValue;
+  const { createUserWithEmailPass, notify } = useAuth();
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -80,7 +79,7 @@ const Login = () => {
           <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
             <div className="card-body">
               <fieldset className="fieldset ">
-                  <legend className="fieldset-legend">Register Now...!!!</legend>
+                <legend className="fieldset-legend">Register Now...!!!</legend>
 
                 <form onSubmit={handleFormSubmit}>
                   <label className="label mb-1 mt-4">Name*</label>
