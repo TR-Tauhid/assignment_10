@@ -1,9 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink, useLoaderData } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const MyList = () => {
-  const touristSpots = useLoaderData();
+  const touristSpotsData = useLoaderData();
+  const [touristSpots, setTouristSpot] = useState(touristSpotsData);
   const authValue = useContext(AuthContext);
   const { user, notify } = authValue;
   const userID = user?.uid;
@@ -42,9 +43,20 @@ const MyList = () => {
     }
   };
 
-  const handleDeleteBtn = async () => {
-    
-  }
+  const handleDeleteBtn = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:5000/myList/${id}`, {
+      method: "DELETE",
+    })
+        const data = await res.json();
+        if (data.deletedCount > 0) {
+          notify("The tourist spot has been deleted...!!!", "success");
+          setTouristSpot(touristSpots.filter((touristSpot) => touristSpot._id !== id))
+        }
+    }catch(err) {
+      notify(err.message, "error");
+    }
+  };
 
   return (
     <div>
@@ -55,10 +67,8 @@ const MyList = () => {
               <div key={index} className="card bg-base-100 w-96 shadow-sm">
                 <div className="card-body">
                   <h2 className="card-title">{touristSpot.name}</h2>
-                  <h2 className="card-title">{touristSpot.email}</h2>
                   <p>
-                    A card component has a figure, a body part, and inside body
-                    there are title and actions parts
+                    {touristSpot.description}
                   </p>
                 </div>
                 <figure>
@@ -75,7 +85,12 @@ const MyList = () => {
                   >
                     Edit
                   </button>
-                  <button onClick={handleDeleteBtn} className="btn btn-warning bg-red-700 text-white border-amber-50 border-2">Delete </button>
+                  <button
+                    onClick={() => handleDeleteBtn(touristSpot._id)}
+                    className="btn btn-warning bg-red-700 text-white border-amber-50 border-2"
+                  >
+                    Delete{" "}
+                  </button>
                   <dialog id="my_modal_1" className="modal ">
                     <div className="modal-box w-full">
                       <div>
