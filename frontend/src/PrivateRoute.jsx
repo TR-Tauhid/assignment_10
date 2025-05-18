@@ -1,23 +1,34 @@
-import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import React, { useEffect, useRef } from "react";
+import LoadingPage from "./components/LoadingPage";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../src/context/AuthContext";
 
-import { useAuth } from '../context/AuthContext'; 
-import LoadingPage from './components/LoadingPage';
-
-const PrivateRoute = () => {
-    const { user, loading } = useAuth(); 
-
-    if (loading) {
-        return (
-              <LoadingPage/>
+const PrivateRoute = ({children}) => {
+  const { user, loading, notify } = useAuth();
+  const hasNotified = useRef(false);
+  useEffect(() => {
+    if (!loading && !hasNotified.current) {
+      if (!user) {
+        notify(
+          "Please Log in to see your list of tourist spots...!!!",
+          "warning"
         );
+        hasNotified.current = true;
+      } else {
+        notify("Welcome to your list of tourist spots...!!!", "success");
+        hasNotified.current = true;
+      }
     }
+  }, [user, loading, notify]);
 
-    if (user) {
-        return <Outlet />;
-    }
-    
-    return <Navigate to="/login" replace />;
+  if (loading) {
+    return <LoadingPage />;
+  }
+
+  if (user) {
+    return children;
+  }
+  return <Navigate to="/login" replace />;
 };
 
 export default PrivateRoute;

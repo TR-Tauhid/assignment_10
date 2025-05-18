@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import PrivateRoute from "../PrivateRoute";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -44,9 +45,7 @@ const Navbar = () => {
             <li>
               <NavLink to="/addTouristSpot">Add Tourist Spot</NavLink>
             </li>
-            <li>
-              <NavLink to="/myList">My List</NavLink>
-            </li>
+            <li>{user ? <NavLink to="/myList">My List</NavLink> : null}</li>
           </ul>
         </div>
         <a className="btn btn-ghost text-xl">daisyUI</a>
@@ -62,12 +61,7 @@ const Navbar = () => {
           <li>
             <NavLink to="/addTouristSpot">Add Tourist Spot</NavLink>
           </li>
-          <li>
-            <NavLink to="/myList">My List</NavLink>
-          </li>
-          {/* <li>
-            <NavLink to="/viewDetails">View Details</NavLink>
-          </li> */}
+          <li>{user ? <NavLink to="/myList">My List</NavLink> : null}</li>
         </ul>
       </div>
       <div>

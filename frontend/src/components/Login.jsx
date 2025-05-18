@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import {useAuth} from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 
 const Login = () => {
@@ -15,7 +14,7 @@ const Login = () => {
     const password = form.get("password");
     signInWithEmailPass(email, password)
       .then(() => {
-        navigete(-1);
+        navigete("/");
         notify("Login Successful...!!!", "success");
       })
       .catch((error) => {

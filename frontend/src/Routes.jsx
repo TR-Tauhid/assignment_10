@@ -10,6 +10,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import MyList from "./components/MyList";
 import ViewDetails from "./components/ViewDetails";
+import PrivateRoute from "./PrivateRoute";
 
 let router = createBrowserRouter([
   {
@@ -49,9 +50,7 @@ let router = createBrowserRouter([
         path: "/myList",
         loader: async () => {
           try {
-            const res = await fetch(
-              `http://localhost:5000/myList/`
-            );
+            const res = await fetch(`http://localhost:5000/myList/`);
             if (!res.ok) {
               const errorData = await res.json().catch(() => ({
                 message: res.statusText || "Unknown server error",
@@ -66,7 +65,11 @@ let router = createBrowserRouter([
             );
           }
         },
-        element: <MyList />,
+        element: (
+          <PrivateRoute>
+            <MyList />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/viewDetails/:id",
