@@ -3,25 +3,18 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
 
-dotenv.config();
-
 const app = express();
+app.use(cors());
+dotenv.config();
+app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
-app.use(cors());
-app.use(express.json());
 
 const dbUser = process.env.DB_USER;
 const dbPassword = process.env.DB_PASSWORD;
 const dbName = process.env.DB_NAME;
 
-if (!dbUser || !dbPassword) {
-  console.error(
-    "FATAL ERROR: DB_USER or DB_PASSWORD not provided in environment variables!"
-  );
-
-  process.exit(1);
-}
+// MongoDB functions here...
 
 const uri = `mongodb+srv://${dbUser}:${dbPassword}@assignmenttencluster.h7hk2wy.mongodb.net/?retryWrites=true&w=majority&appName=assignmentTenCluster`;
 
@@ -49,6 +42,9 @@ async function run() {
     );
 
     const touristSpotCollection = db.collection("touristSpots");
+    const countriesSpotCollection = db.collection("countriesSpots");
+
+    // CURD operation of tourists spots here...
 
     app.post("/addTouristSpot", async (req, res) => {
       const touristDetails = req.body;
@@ -84,41 +80,102 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await touristSpotCollection.deleteOne(query);
-      res.send(result);
+      res.status(200).send(result);
     });
 
     app.patch("/myList/:id", async (req, res) => {
       const id = req.params.id;
       const updatedTouristSpot = req.body;
-      const filter = { _id: new ObjectId(id)};
-      const option = { upsert: false }
+      const filter = { _id: new ObjectId(id) };
+      const option = { upsert: false };
       const item = {
         $set: {
-          ...updatedTouristSpot
-        }
+          ...updatedTouristSpot,
+        },
       };
-      const result = await touristSpotCollection.updateOne(filter, item, option);
+      const result = await touristSpotCollection.updateOne(
+        filter,
+        item,
+        option
+      );
       res.send(result);
     });
 
     app.get("/viewDetails/:id", async (req, res) => {
       const id = req.params.id;
 
-      if (!ObjectId.isValid(id)) {
-        return res
-          .status(400)
-          .json({ message: "Invalid ID format. Must be a valid ObjectId." });
+      try {
+        let findData = null;
+
+        findData = await touristSpotCollection.findOne({
+          _id: new ObjectId(id),
+        });
+        if (!findData) {
+          const findData = await countriesSpotCollection.findOne({
+            _id: new ObjectId(id),
+          });
+          res.status(200).json(findData);
+        } else {
+          res.status(404).json({ message: "Data not found" });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        res
+          .status(500)
+          .json({ message: "An error occurred while fetching data." });
       }
+    });
 
-      const touristSpot = await touristSpotCollection.findOne({
-        _id: new ObjectId(id),
-      });
+    // CURD operation of Countries here...
 
-      if (touristSpot) {
-        res.status(200).json(touristSpot);
+    app.post("/countries", async (req, res) => {
+      const countryDetails = req.body;
+      const result = await countriesSpotCollection.insertOne(countryDetails);
+      if (result.acknowledged) {
+        res.status(201).json({
+          message: "Country travelling spot added successfully",
+          insertedId: result.insertedId,
+          countryDetails: countryDetails,
+        });
       } else {
-        res.status(404).json({ message: "Tourist spot not found" });
+        res
+          .status(500)
+          .json({ message: "Failed to add country travelling spot" });
       }
+    });
+
+    app.get("/countries", async (req, res) => {
+      const allCountriesSpotData = await db
+        .collection("countriesSpots")
+        .find({})
+        .toArray();
+      res.status(200).json(allCountriesSpotData);
+    });
+
+    app.patch("/countries/:id", async (req, res) => {
+      const id = req.params.id;
+      const updateCountrySpotDetail = req.body;
+      console.log(updateCountrySpotDetail);
+      const filter = { _id: new ObjectId(id) };
+      const option = { upsert: false };
+      const item = {
+        $set: {
+          ...updateCountrySpotDetail,
+        },
+      };
+      const result = await countriesSpotCollection.updateOne(
+        filter,
+        item,
+        updateCountrySpotDetail
+      );
+      res.status(200).send(result);
+    });
+
+    app.delete("/countries/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await countriesSpotCollection.deleteOne(query);
+      res.status(200).send(result);
     });
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);

@@ -1,5 +1,6 @@
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
+import { Helmet } from "react-helmet";
 
 const Login = () => {
   const navigete = useNavigate();
@@ -42,6 +43,11 @@ const Login = () => {
 
   return (
     <div>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Cholo | Login</title>
+        <link rel="canonical"  />
+      </Helmet>
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content flex-col gap-x-14 lg:flex-row-reverse">
           <div className="text-center lg:text-left">

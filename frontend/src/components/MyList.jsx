@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import { NavLink, useLoaderData } from "react-router-dom";
 import swal from "sweetalert";
 import { useAuth } from "../context/AuthContext";
+import { Helmet } from "react-helmet";
 
 const MyList = () => {
   const { user, notify } = useAuth();
@@ -47,14 +48,14 @@ const MyList = () => {
     };
 
     try {
-      const willDelete = await swal({
+      const willUpdate = await swal({
         title: "Are you sure?",
         text: "Once updated, these changes will be permanent...!!!",
         icon: "warning",
         buttons: true,
         dangerMode: true,
       });
-      if (willDelete) {
+      if (willUpdate) {
         const res = await fetch(
           `http://localhost:5000/myList/${editTouristSpot._id}`,
           {
@@ -103,7 +104,7 @@ const MyList = () => {
     try {
       const willDelete = await swal({
         title: "Are you sure?",
-        text: "Once DELETED, you will not be able to recover this tourist spot information file!",
+        text: "Once DELETED, you will not be able to recover this tourist spot data..!!!",
         icon: "warning",
         buttons: true,
         dangerMode: true,
@@ -132,13 +133,21 @@ const MyList = () => {
 
   return (
     <div>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Cholo | My List</title>
+        <link rel="canonical"  />
+      </Helmet>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {touristSpots.map(
           (touristSpot, index) =>
             touristSpot.uid === userID && (
-              <div key={index} className="card bg-base-100 w-96 shadow-sm">
+              <div
+                key={index}
+                className="card bg-base-100 w-96 shadow-sm space-y-3"
+              >
                 <div className="card-body">
-                  <div className="card-body">
+                  <div className="card-body p-0">
                     <h1>{touristSpot.spotNames}</h1>
                     <h1>{touristSpot.country}</h1>
                     <h1>{touristSpot.location}</h1>
@@ -151,10 +160,10 @@ const MyList = () => {
                     <h1>{touristSpot.name}</h1>
                   </div>
                 </div>
+
                 <figure>
                   <img src={touristSpot.photoURL} alt={touristSpot.name} />
                 </figure>
-                <p>{touristSpot.image}</p>
 
                 <div>
                   <button
@@ -171,7 +180,7 @@ const MyList = () => {
                     onClick={() => handleDeleteBtn(touristSpot._id)}
                     className="btn btn-warning bg-red-700 text-white border-amber-50 border-2"
                   >
-                    Delete{" "}
+                    Delete
                   </button>
                 </div>
                 <NavLink to={`/viewDetails/${touristSpot._id} `} key={index}>

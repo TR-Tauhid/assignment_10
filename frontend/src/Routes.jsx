@@ -11,6 +11,7 @@ import Register from "./components/Register";
 import MyList from "./components/MyList";
 import ViewDetails from "./components/ViewDetails";
 import PrivateRoute from "./PrivateRoute";
+import CountryModify from "./components/CountryModify";
 
 let router = createBrowserRouter([
   {
@@ -23,7 +24,7 @@ let router = createBrowserRouter([
       }
       return res.json();
     },
-    // errorElement: <ErrorPage />,
+    errorElement: <ErrorPage />,
 
     children: [
       {
@@ -32,7 +33,11 @@ let router = createBrowserRouter([
       },
       {
         path: "addTouristSpot",
-        element: <AddTouristSpot />,
+        element: (
+          <PrivateRoute>
+            <AddTouristSpot />
+          </PrivateRoute>
+        ),
       },
       {
         path: "allTouristSpot",
@@ -93,6 +98,31 @@ let router = createBrowserRouter([
           }
         },
         element: <ViewDetails />,
+      },
+      {
+        path: "/countries",
+        loader: async () => {
+          try {
+            const res = await fetch(`http://localhost:5000/countries/`);
+            if (!res.ok) {
+              const errorData = await res.json().catch(() => ({
+                message: res.statusText || "Unknown server error",
+              }));
+              throw new Error(errorData.message || "Failed to fetch data");
+            }
+            return await res.json();
+          } catch (error) {
+            console.error("Error in loader:", error);
+            throw new Error(
+              "Could not load countries spot details: " + error.message
+            );
+          }
+        },
+        element: (
+          <PrivateRoute>
+            <CountryModify />
+          </PrivateRoute>
+        ),
       },
     ],
   },

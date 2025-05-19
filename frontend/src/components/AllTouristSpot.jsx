@@ -2,7 +2,8 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { NavLink } from "react-router";
-import {useAuth} from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
+import { Helmet } from "react-helmet";
 
 const AllTouristSpot = () => {
   const { notify } = useAuth();
@@ -26,6 +27,11 @@ const AllTouristSpot = () => {
   });
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>All Tourist Spot</title>
+        <link rel="canonical"  />
+      </Helmet>
       {touristSpots.map((touristSpot, index) => (
         <NavLink to={`/viewDetails/${touristSpot._id} `} key={index}>
           <div key={index} className="card bg-base-100 w-96 shadow-sm">
@@ -42,10 +48,7 @@ const AllTouristSpot = () => {
               <h1>{touristSpot.name}</h1>
             </div>
             <figure>
-              <img
-                src={touristSpot.photoURL}
-                alt={touristSpot.name}
-              />
+              <img src={touristSpot.photoURL} alt={touristSpot.name} />
             </figure>
             <p>{touristSpot.image}</p>
           </div>

@@ -1,17 +1,27 @@
 import { NavLink, useNavigate } from "react-router";
+import { Helmet } from "react-helmet";
 import { useAuth } from "../context/AuthContext";
 import PrivateRoute from "../PrivateRoute";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { notify } = useAuth();
 
   const { user, logOut } = useAuth();
 
   const handleLogoutBtn = () => {
-    logOut().then(() => navigate("/"));
+    logOut().then(() => {
+      navigate("/");
+      notify("Logout Sussessful...Goodbye...!!!", "success");
+    });
   };
   return (
-    <div className="navbar bg-base-100 shadow-sm justify-around">
+    <div className="navbar bg-base-100 shadow-sm justify-around mt-6">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Cholo | Navbar</title>
+        <link rel="canonical" />
+      </Helmet>
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -43,12 +53,26 @@ const Navbar = () => {
               <NavLink to="/allTouristSpot">All Tourist Spot</NavLink>
             </li>
             <li>
-              <NavLink to="/addTouristSpot">Add Tourist Spot</NavLink>
+              {user ? (
+                <NavLink to="/addTouristSpot">Add Tourist Spot</NavLink>
+              ) : null}
             </li>
             <li>{user ? <NavLink to="/myList">My List</NavLink> : null}</li>
+            <li>
+              {user ? <NavLink to="/countries">Country Spots </NavLink> : null}
+            </li>
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl">daisyUI</a>
+        <div>
+          <a href="/">
+            <img
+              title="Cholo Home"
+              className="w-18 h-18 rounded-full"
+              src="/cholo.svg"
+              alt="Cholo Logo"
+            />
+          </a>
+        </div>
       </div>
       <div className="navbar-center hidden lg:flex ">
         <ul className="menu menu-horizontal px-1">
@@ -59,23 +83,35 @@ const Navbar = () => {
             <NavLink to="/allTouristSpot">All Tourist Spot</NavLink>
           </li>
           <li>
-            <NavLink to="/addTouristSpot">Add Tourist Spot</NavLink>
+            {user ? (
+              <NavLink to="/addTouristSpot">Add Tourist Spot</NavLink>
+            ) : null}
           </li>
           <li>{user ? <NavLink to="/myList">My List</NavLink> : null}</li>
+          <li>
+            {user ? <NavLink to="/countries">Country Spots </NavLink> : null}
+          </li>
         </ul>
       </div>
       <div>
         {user ? (
           <>
-            <div className="flex-none">
-              <div className="dropdown dropdown-end">
+            <div title="" className="flex-none">
+              <div className="dropdown dropdown-hover dropdown-end">
                 <div
                   tabIndex={0}
                   role="button"
-                  className="btn btn-ghost btn-circle avatar"
+                  className="btn btn-ghost btn-circle tooltip tooltip-top avatar"
+                  data-tip={user?.displayName}
                 >
                   <div className="w-full rounded-full border-white border-2">
-                    <img src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" />
+                    <img
+                      src={
+                        user?.photoURL
+                          ? `${user?.photoURL}`
+                          : "https://img.daisyui.com/images/profile/demo/yellingcat@192.webp"
+                      }
+                    />
                   </div>
                 </div>
                 <ul

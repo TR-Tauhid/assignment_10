@@ -1,5 +1,6 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext.jsx";
+import { Helmet } from "react-helmet";
 
 const AddTouristSpot = () => {
   const { notify, user } = useAuth();
@@ -17,9 +18,9 @@ const AddTouristSpot = () => {
       season: form.get("season"),
       travelTime: form.get("travelTime"),
       totalVisitors: form.get("totalVisitors"),
-      email: form.get("email"),
-      name: form.get("name"),
-      uid: user.uid,
+      email: user?.email,
+      name: user?.displayName,
+      uid: user?.uid,
     };
 
     try {
@@ -42,6 +43,11 @@ const AddTouristSpot = () => {
 
   return (
     <div className="w-full ">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Cholo | Add Tourist Spot</title>
+        <link rel="canonical"  />
+      </Helmet>
       <form
         onSubmit={handleTouristForm}
         className="w-1/2 flex justify-center mx-auto"
@@ -71,16 +77,15 @@ const AddTouristSpot = () => {
             <span>Tourists Spot Name</span>
           </label>
 
-          <label className="floating-label">
-            <input
-              type="text"
-              name="country"
-              className="input"
-              placeholder="Country Name"
-              required
-            />
-            <span>Country Name</span>
-          </label>
+          <select name="country" defaultValue="Select Country" className="select">
+            <option disabled={true}>Select Country</option>
+            <option value={"bangladesh"}>Bangladesh</option>
+            <option value={"thailand"}>Thailand</option>
+            <option value={"indonesia"}>Indonesia</option>
+            <option value={"malaysia"}>Malaysia</option>
+            <option value={"vietnam"}>Vietnam</option>
+            <option value={"cambodia"}>Cambodia</option>
+          </select>
 
           <label className="floating-label">
             <input
@@ -93,19 +98,16 @@ const AddTouristSpot = () => {
             <span>Location</span>
           </label>
 
-          <label className="floating-label">
-            <textarea
-              row="30"
-              col="50"
-              type="text"
-              name="description"
-              className="textarea"
-              placeholder="Short Description"
-              required
-            />
-            <span>Short Description</span>
-          </label>
-
+          <select name="season" defaultValue="Select Seasonality" className="select">
+            <option disabled={true}>Select Seasonality</option>
+            <option value={"Summer"}>Summer</option>
+            <option value={"Rainy"}>Rainy</option>
+            <option value={"Autumn"}>Autumn</option>
+            <option value={"Late- Autumn"}>Late- Autumn</option>
+            <option value={"Winter"}>Winter</option>
+            <option value={"Spring"}>Spring</option>
+          </select>
+          
           <label className="floating-label">
             <input
               type="number"
@@ -117,15 +119,6 @@ const AddTouristSpot = () => {
             <span>Average Cost in Taka</span>
           </label>
 
-          <select name="season" defaultValue="Select Season" className="select">
-            <option disabled={true}>Select Seasonality</option>
-            <option value={"Summer"}>Summer</option>
-            <option value={"Rainy"}>Rainy</option>
-            <option value={"Autumn"}>Autumn</option>
-            <option value={"Late- Autumn"}>Late- Autumn</option>
-            <option value={"Winter"}>Winter</option>
-            <option value={"Spring"}>Spring</option>
-          </select>
 
           <label className="floating-label">
             <input
@@ -148,26 +141,20 @@ const AddTouristSpot = () => {
             />
             <span>Total Visitors Per Year</span>
           </label>
-          <label className="floating-label">
-            <input
-              type="email"
-              name="email"
-              className="input"
-              placeholder="User Email"
-              required
-            />
-            <span>User Email</span>
-          </label>
-          <label className="floating-label">
-            <input
+
+            <label className="floating-label">
+            <textarea
+              row="30"
+              col="50"
               type="text"
-              name="name"
-              className="input"
-              placeholder="User Name"
+              name="description"
+              className="textarea"
+              placeholder="Short Description"
               required
             />
-            <span>User Name</span>
+            <span>Short Description</span>
           </label>
+
           <button type="submit" className="btn btn-primary w-full mt-4">
             Add Tourist Spot
           </button>

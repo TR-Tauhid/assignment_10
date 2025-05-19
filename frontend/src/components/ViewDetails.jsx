@@ -1,4 +1,6 @@
 import React from "react";
+import { Helmet } from "react-helmet";
+
 import { useLoaderData } from "react-router-dom";
 
 const ViewDetails = () => {
@@ -14,10 +16,15 @@ const ViewDetails = () => {
     spotNames,
     photoURL,
     name,
-    email
+    email,
   } = touristSpot;
   return (
     <div>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Cholo | View Details</title>
+        <link rel="canonical"  />
+      </Helmet>
       <div className="card bg-base-100 w-96 shadow-sm">
         <figure>
           <img src={photoURL} alt={spotNames} />
