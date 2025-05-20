@@ -26,6 +26,7 @@ const CountryModify = () => {
       uid: user?.uid,
     };
 
+    console.log(countryDetails);
     await fetch("http://localhost:5000/countries", {
       method: "POST",
       headers: { "Content-Type": "Application/json" },
@@ -36,6 +37,10 @@ const CountryModify = () => {
           "Country Tourist Spot have been added successfully..!!!",
           "success"
         );
+        e.target.reset();
+        setCountryData((countries) => {
+          return [...countries, countryDetails];
+        });
       } else {
         notify(`${res.statusText}`, "error");
       }
@@ -152,9 +157,28 @@ const CountryModify = () => {
     }
   };
 
+  const handleSort = (sortOption) => {
+    if (sortOption === "averageCost") {
+      console.log("sorted country data", countryData);
+      const sortedCountryData = [...countryData].sort((a, b) => {
+        return a.averageCost - b.averageCost;
+      });
+      console.log("sorted country data", sortedCountryData);
+      setCountryData(sortedCountryData);
+    }
+    if (sortOption === "country") {
+      const sortedCountryData = [...countryData].sort((a, b) => {
+        return a.country.localeCompare(b.country);
+      });
+      setCountryData(sortedCountryData);
+    }
+  };
+
   return (
     <div>
-      <h1>Modify Country Details</h1>
+      {/* Adding a Country Spot here */}
+
+      <h1>Add a Country Spot Details</h1>
       <div>
         <details className="collapse bg-base-100 border-base-300 border">
           <summary className="collapse-title font-semibold">
@@ -273,33 +297,54 @@ const CountryModify = () => {
         </details>
       </div>
 
+      {/* Sorting Section here... */}
+
+      <div>
+        <div className="dropdown dropdown-start">
+          <div tabIndex={0} role="button" className="btn m-1">
+            Click ⬇️
+          </div>
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+          >
+            <li>
+              <a onClick={() => handleSort("averageCost")}>Average Cost</a>
+            </li>
+            <li>
+              <a onClick={() => handleSort("country")}>Country</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
       {/* Show Countries tourist spot list... */}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {countryData?.map((countrySpot, index) => (
           <div key={index}>
             <div key={index} className="card bg-base-100 w-96 shadow-sm">
-              <div className="card-body">
-                <h1>{countrySpot.spotNames}</h1>
-                <h1>{countrySpot.country}</h1>
-                <h1>{countrySpot.location}</h1>
-                <h1>{countrySpot.description}</h1>
-                <h1>{countrySpot.averageCost}</h1>
-                <h1>{countrySpot.season}</h1>
-                <h1>{countrySpot.travelTime}</h1>
-                <h1>{countrySpot.email}</h1>
-                <h1>{countrySpot.name}</h1>
+              <div>
+                <div className="card-body">
+                  <h1>{countrySpot.spotNames}</h1>
+                  <h1>{countrySpot.country && countrySpot.country.charAt(0).toUpperCase() + countrySpot.country.slice(1)}</h1>
+                  <h1>{countrySpot.location}</h1>
+                  <h1>{countrySpot.description}</h1>
+                  <h1>{countrySpot.averageCost}</h1>
+                  <h1>{countrySpot.season}</h1>
+                  <h1>{countrySpot.travelTime}</h1>
+                  <h1>{countrySpot.email}</h1>
+                  <h1>{countrySpot.name}</h1>
+                </div>
+
+                <figure>
+                  <img src={countrySpot.photoURL} alt={countrySpot.name} />
+                </figure>
               </div>
 
-              <figure>
-                <img src={countrySpot.photoURL} alt={countrySpot.name} />
-              </figure>
-
-              <p>{countrySpot.image}</p>
+              {/*Updating Modal here... */}
 
               <div>
-                {/*Updating Modal here... */}
-
                 <dialog id="my_modal_1" className="modal ">
                   <div className="modal-box w-full">
                     <div>
@@ -344,12 +389,12 @@ const CountryModify = () => {
                             className="select"
                           >
                             <option disabled={true}>Select Country</option>
-                            <option value={"bangladesh"}>Bangladesh</option>
-                            <option value={"thailand"}>Thailand</option>
-                            <option value={"indonesia"}>Indonesia</option>
-                            <option value={"malaysia"}>Malaysia</option>
-                            <option value={"vietnam"}>Vietnam</option>
-                            <option value={"cambodia"}>Cambodia</option>
+                            <option value={"Bangladesh"}>Bangladesh</option>
+                            <option value={"Thailand"}>Thailand</option>
+                            <option value={"Indonesia"}>Indonesia</option>
+                            <option value={"Malaysia"}>Malaysia</option>
+                            <option value={"Vietnam"}>Vietnam</option>
+                            <option value={"Cambodia"}>Cambodia</option>
                           </select>
 
                           <label className="floating-label">
@@ -439,14 +484,14 @@ const CountryModify = () => {
               </div>
             </div>
             <div>
-              <NavLink to={`/viewDetails/${countrySpot._id} `}>
+              <NavLink to={`/viewDetails/${countrySpot?._id} `}>
                 <button className="btn btn-primary">View Details</button>
               </NavLink>
 
               <button
                 className="btn"
                 onClick={() => {
-                  handleEditBtn(countrySpot._id);
+                  handleEditBtn(countrySpot?._id);
                   document.getElementById("my_modal_1").showModal();
                 }}
               >
@@ -454,7 +499,7 @@ const CountryModify = () => {
               </button>
 
               <button
-                onClick={() => handleDeleteBtn(countrySpot._id)}
+                onClick={() => handleDeleteBtn(countrySpot?._id)}
                 className="btn btn-warning bg-red-700 text-white border-amber-50 border-2"
               >
                 Delete
