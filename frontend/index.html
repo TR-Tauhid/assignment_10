@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <link href="/src/index.css" rel="stylesheet" />
     <link rel="icon" type="image/svg+xml" href="cholo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Fonts here -->
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
+    </style>
     <title>Cholo</title>
   </head>
   <body>
-    <div id="root" class="h-full"></div>
+    <div id="root" class="flex flex-col items-center min-h-full bg-fixed bg-cover bg-[url(../public/background.svg)]"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

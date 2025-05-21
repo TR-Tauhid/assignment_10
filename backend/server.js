@@ -133,14 +133,14 @@ async function run() {
       const result = await countriesSpotCollection.insertOne(countryDetails);
       if (result.acknowledged) {
         res.status(201).json({
-          message: "Country travelling spot added successfully",
+          message: "Country traveling spot added successfully",
           insertedId: result.insertedId,
           countryDetails: countryDetails,
         });
       } else {
         res
           .status(500)
-          .json({ message: "Failed to add country travelling spot" });
+          .json({ message: "Failed to add country traveling spot" });
       }
     });
 

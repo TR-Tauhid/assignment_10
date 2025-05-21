@@ -1,11 +1,13 @@
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import { Helmet } from "react-helmet";
+import LoadingPage from "./LoadingPage";
+
 
 const Login = () => {
   const navigete = useNavigate();
 
-  const { signInWithEmailPass, googleSignIn, facebookSignIn, notify } =
+  const { signInWithEmailPass, googleSignIn, facebookSignIn, notify, loading } =
     useAuth();
 
   const handleFormSubmit = (e) => {
@@ -41,6 +43,7 @@ const Login = () => {
       .catch((error) => notify(error.message, "error"));
   };
 
+  if(loading) {return <LoadingPage></LoadingPage>}
   return (
     <div>
       <Helmet>
@@ -48,7 +51,7 @@ const Login = () => {
         <title>Cholo | Login</title>
         <link rel="canonical"  />
       </Helmet>
-      <div className="hero bg-base-200 min-h-screen">
+      <div className="hero  min-h-screen">
         <div className="hero-content flex-col gap-x-14 lg:flex-row-reverse">
           <div className="text-center lg:text-left">
             <h1 className="text-5xl font-bold">Login now!</h1>
@@ -59,7 +62,7 @@ const Login = () => {
             </p>
           </div>
 
-          <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+          <div className="card  w-full max-w-sm shrink-0 shadow-2xl">
             <div className="card-body">
               <fieldset className="fieldset space-y-3.5">
                 <legend className="fieldset-legend">Login</legend>

@@ -3,13 +3,20 @@ import { NavLink, useLoaderData } from "react-router-dom";
 import swal from "sweetalert";
 import { useAuth } from "../context/AuthContext";
 import { Helmet } from "react-helmet";
+import LoadingPage from "./LoadingPage";
 
 const MyList = () => {
-  const { user, notify } = useAuth();
+  const { user, notify, loading } = useAuth();
   const touristSpotsData = useLoaderData();
   const [touristSpots, setTouristSpots] = useState(touristSpotsData);
   const [editTouristSpot, setEditTouristSpot] = useState();
   const userID = user?.uid;
+
+  const matchingTouristSpots = touristSpots.filter((touristSpot) => {
+    return touristSpot.uid === userID;
+  });
+
+  console.log(matchingTouristSpots);
 
   const handleUpdateFormSubmit = async (e) => {
     e.preventDefault();
@@ -131,21 +138,22 @@ const MyList = () => {
     }
   };
 
+  if (loading) {
+    return <LoadingPage></LoadingPage>;
+  }
   return (
     <div>
       <Helmet>
         <meta charSet="utf-8" />
         <title>Cholo | My List</title>
-        <link rel="canonical"  />
+        <link rel="canonical" />
       </Helmet>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {touristSpots.map(
           (touristSpot, index) =>
             touristSpot.uid === userID && (
-              <div
-                key={index}
-                className="card bg-base-100 w-96 shadow-sm space-y-3"
-              >
+              <div key={index} className="card  w-96 shadow-sm space-y-3">
                 <div className="card-body">
                   <div className="card-body p-0">
                     <h1>{touristSpot.spotNames}</h1>
@@ -196,7 +204,7 @@ const MyList = () => {
                         onSubmit={handleUpdateFormSubmit}
                         className=" flex justify-center mx-auto"
                       >
-                        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4 gap-4 grow flex flex-col">
+                        <fieldset className="fieldset  border-base-300 rounded-box w-xs border p-4 gap-4 grow flex flex-col">
                           <legend className="fieldset-legend">
                             Update Tourist Spot
                           </legend>
@@ -335,6 +343,14 @@ const MyList = () => {
                 </dialog>
               </div>
             )
+        )}
+        {matchingTouristSpots.length > 0 || (
+          <div>
+            <h1>You haven't added any Tourist Spots ...!!!</h1>
+            <button to="/addTouristSpot" className="btn">
+              Add Tourist Spots
+            </button>
+          </div>
         )}
       </div>
     </div>

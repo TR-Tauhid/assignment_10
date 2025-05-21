@@ -3,7 +3,7 @@ import React from "react";
 
 const ErrorPage = () => {
   return (
-    <div className="h-full flex flex-col">
+    <div className="grow flex flex-col items-center">
       <div className="main_wrapper grow mx-auto">
         <div className="main">
           <div className="antenna">

@@ -1,9 +1,10 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Helmet } from "react-helmet";
+import LoadingPage from "./LoadingPage";
 
 const AddTouristSpot = () => {
-  const { notify, user } = useAuth();
+  const { notify, user, loading } = useAuth();
 
   const handleTouristForm = async (e) => {
     e.preventDefault();
@@ -41,6 +42,11 @@ const AddTouristSpot = () => {
     }
   };
 
+  if(loading)
+  {
+    return <LoadingPage></LoadingPage>
+  }
+  
   return (
     <div className="w-full ">
       <Helmet>
@@ -52,7 +58,7 @@ const AddTouristSpot = () => {
         onSubmit={handleTouristForm}
         className="w-1/2 flex justify-center mx-auto"
       >
-        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4 gap-4 grow flex flex-col">
+        <fieldset className="fieldset border-base-300 rounded-box w-xs border p-4 gap-4 grow flex flex-col">
           <legend className="fieldset-legend">Add Tourist Spot</legend>
 
           <label className="floating-label">

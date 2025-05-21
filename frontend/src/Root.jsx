@@ -6,10 +6,10 @@ import Footer from "./components/Footer";
 
 const Root = () => {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col min-h-max grow w-full">
       <ToastContainer />
       <Navbar />
-      <div className="flex justify-center items-center grow ">
+      <div className="flex justify-center items-center grow">
         <Outlet></Outlet>
       </div>
       <Footer/>

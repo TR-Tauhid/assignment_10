@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 
 const LoadingPage = () => {
   return (
-    <div>
+    <div className="h-full flex items-center">
       <Helmet>
         <meta charSet="utf-8" />
         <title>Cholo is Loading</title>

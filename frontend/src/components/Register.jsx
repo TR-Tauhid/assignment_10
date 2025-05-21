@@ -3,11 +3,12 @@ import { useAuth } from "../context/AuthContext";
 import { updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router";
 import { Helmet } from "react-helmet";
+import LoadingPage from "./LoadingPage";
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const { createUserWithEmailPass, notify } = useAuth();
+  const { createUserWithEmailPass, notify, loading } = useAuth();
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -65,24 +66,28 @@ const Login = () => {
       });
   };
 
+  if (loading) {
+    return <LoadingPage></LoadingPage>;
+  }
+
   return (
     <div>
       <Helmet>
         <meta charSet="utf-8" />
         <title>Cholo | Register</title>
-        <link rel="canonical"  />
+        <link rel="canonical" />
       </Helmet>
-      <div className="hero bg-base-200 min-h-screen">
+      <div className="hero  min-h-screen">
         <div className="hero-content flex-col gap-x-14 lg:flex-row-reverse">
           <div className="text-center lg:text-left">
-            <h1 className="text-5xl font-bold">Login now!</h1>
+            <h1 className="text-5xl font-bold">Register now!</h1>
             <p className="py-6">
               Welcome Traveller, please login to your account to continue your
               journey.
             </p>
           </div>
 
-          <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+          <div className="card  w-full max-w-sm shrink-0 shadow-2xl">
             <div className="card-body">
               <fieldset className="fieldset ">
                 <legend className="fieldset-legend">Register Now...!!!</legend>

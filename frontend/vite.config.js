@@ -5,6 +5,10 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
 
+  daisyui: {
+    themes: ["light", "dark", "synthwave", "cupcake", "dracula"],
+  },
+
   server: {
     host: "0.0.0.0",
     port: 5173,

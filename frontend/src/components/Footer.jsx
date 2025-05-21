@@ -24,7 +24,12 @@ const Footer = () => {
           <a className="link link-hover">Privacy policy</a>
           <a className="link link-hover">Cookie policy</a>
         </nav>
+
+        
       </footer>
+      <div className="text-center bg-black text-white pb-5">
+          Made By Md Tohibur Rahman. 20<sup>th</sup> May, 2025.
+        </div>
     </div>
   );
 };

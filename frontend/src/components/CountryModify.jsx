@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import LoadingPage from "./LoadingPage";
 import swal from "sweetalert";
 import { NavLink, useLoaderData } from "react-router-dom";
 
 const CountryModify = () => {
-  const { user, notify } = useAuth();
+  const { user, notify, loading } = useAuth();
   const countryDataFromLoader = useLoaderData();
   const [countryData, setCountryData] = useState(countryDataFromLoader);
   const [editingSpot, setEditingSpot] = useState();
@@ -174,22 +175,25 @@ const CountryModify = () => {
     }
   };
 
+  if (loading) {
+    return <LoadingPage></LoadingPage>;
+  }
   return (
     <div>
       {/* Adding a Country Spot here */}
 
       <h1>Add a Country Spot Details</h1>
       <div>
-        <details className="collapse bg-base-100 border-base-300 border">
+        <details className="collapse  border-base-300 border">
           <summary className="collapse-title font-semibold">
-            Add a Travelling destination of a South East Asian Countries.
+            Add a Traveling destination of a South East Asian Countries.
           </summary>
           <div className="collapse-content text-sm">
             <form
               onSubmit={handleAddCountriesBtn}
               className="flex justify-center mx-auto"
             >
-              <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4 gap-4 grow flex flex-col">
+              <fieldset className="fieldset  border-base-300 rounded-box border p-4 gap-4 grow flex flex-col">
                 <legend className="fieldset-legend">Add Tourist Spot</legend>
 
                 <label className="floating-label">
@@ -306,7 +310,7 @@ const CountryModify = () => {
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+            className="dropdown-content menu  rounded-box z-1 w-52 p-2 shadow-sm"
           >
             <li>
               <a onClick={() => handleSort("averageCost")}>Average Cost</a>
@@ -323,11 +327,15 @@ const CountryModify = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {countryData?.map((countrySpot, index) => (
           <div key={index}>
-            <div key={index} className="card bg-base-100 w-96 shadow-sm">
+            <div key={index} className="card  w-96 shadow-sm">
               <div>
                 <div className="card-body">
                   <h1>{countrySpot.spotNames}</h1>
-                  <h1>{countrySpot.country && countrySpot.country.charAt(0).toUpperCase() + countrySpot.country.slice(1)}</h1>
+                  <h1>
+                    {countrySpot.country &&
+                      countrySpot.country.charAt(0).toUpperCase() +
+                        countrySpot.country.slice(1)}
+                  </h1>
                   <h1>{countrySpot.location}</h1>
                   <h1>{countrySpot.description}</h1>
                   <h1>{countrySpot.averageCost}</h1>
@@ -354,7 +362,7 @@ const CountryModify = () => {
                         onSubmit={handleUpdateCountryBtn}
                         className=" flex justify-center mx-auto"
                       >
-                        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4 gap-4 grow flex flex-col">
+                        <fieldset className="fieldset  border-base-300 rounded-box w-xs border p-4 gap-4 grow flex flex-col">
                           <legend className="fieldset-legend">
                             Update Tourist Spot
                           </legend>

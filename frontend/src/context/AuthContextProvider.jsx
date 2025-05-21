@@ -88,6 +88,7 @@ export const AuthProvider = ({ children }) => {
         theme,
         toggleTheme,
         loading, 
+        setLoading,
     };
 
     return (
