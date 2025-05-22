@@ -4,7 +4,7 @@ import cors from "cors";
 import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: true }));
 dotenv.config();
 app.use(express.json());
 
@@ -105,33 +105,26 @@ async function run() {
   const id = req.params.id;
 
   try {
-    // 1. Attempt to find data in the first collection
     let data = await touristSpotCollection.findOne({
       _id: new ObjectId(id),
     });
 
-    // 2. If found in the first collection, send it and return
     if (data) {
-      return res.status(200).json(data); // <<<--- IMPORTANT: 'return' here
+      return res.status(200).json(data);
     }
 
-    // 3. If NOT found in the first collection, attempt to find in the second collection
-    //    We reuse the 'data' variable to avoid shadowing
     data = await countriesSpotCollection.findOne({
       _id: new ObjectId(id),
     });
 
-    // 4. If found in the second collection, send it and return
     if (data) {
-      return res.status(200).json(data); // <<<--- IMPORTANT: 'return' here
+      return res.status(200).json(data); 
     }
 
-    // 5. If not found in *either* collection, send a 404
-    return res.status(404).json({ message: "Data not found" }); // <<<--- IMPORTANT: 'return' here
+    return res.status(404).json({ message: "Data not found" }); 
 
   } catch (error) {
     console.error("Error fetching data:", error);
-    // Ensure error response is always sent and returned
     return res
       .status(500)
       .json({ message: "An error occurred while fetching data." });
@@ -195,6 +188,5 @@ async function run() {
   }
 }
 run().catch(console.dir);
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+
+module.exports = app;
