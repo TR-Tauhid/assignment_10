@@ -101,30 +101,42 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/viewDetails/:id", async (req, res) => {
-      const id = req.params.id;
+   app.get("/viewDetails/:id", async (req, res) => {
+  const id = req.params.id;
 
-      try {
-        let findData = null;
-
-        findData = await touristSpotCollection.findOne({
-          _id: new ObjectId(id),
-        });
-        if (!findData) {
-          const findData = await countriesSpotCollection.findOne({
-            _id: new ObjectId(id),
-          });
-          res.status(200).json(findData);
-        } else {
-          res.status(404).json({ message: "Data not found" });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        res
-          .status(500)
-          .json({ message: "An error occurred while fetching data." });
-      }
+  try {
+    // 1. Attempt to find data in the first collection
+    let data = await touristSpotCollection.findOne({
+      _id: new ObjectId(id),
     });
+
+    // 2. If found in the first collection, send it and return
+    if (data) {
+      return res.status(200).json(data); // <<<--- IMPORTANT: 'return' here
+    }
+
+    // 3. If NOT found in the first collection, attempt to find in the second collection
+    //    We reuse the 'data' variable to avoid shadowing
+    data = await countriesSpotCollection.findOne({
+      _id: new ObjectId(id),
+    });
+
+    // 4. If found in the second collection, send it and return
+    if (data) {
+      return res.status(200).json(data); // <<<--- IMPORTANT: 'return' here
+    }
+
+    // 5. If not found in *either* collection, send a 404
+    return res.status(404).json({ message: "Data not found" }); // <<<--- IMPORTANT: 'return' here
+
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    // Ensure error response is always sent and returned
+    return res
+      .status(500)
+      .json({ message: "An error occurred while fetching data." });
+  }
+});
 
     // CURD operation of Countries here...
 

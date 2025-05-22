@@ -21,7 +21,6 @@ const ViewDetails = () => {
     _id,
   } = touristSpot;
   
-  console.log(touristSpot);
 
   if (loading) {
     return <LoadingPage></LoadingPage>;

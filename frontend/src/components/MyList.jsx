@@ -16,8 +16,6 @@ const MyList = () => {
     return touristSpot.uid === userID;
   });
 
-  console.log(matchingTouristSpots);
-
   const handleUpdateFormSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
@@ -149,31 +147,89 @@ const MyList = () => {
         <link rel="canonical" />
       </Helmet>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-14">
         {touristSpots.map(
           (touristSpot, index) =>
             touristSpot.uid === userID && (
-              <div key={index} className="card  w-96 shadow-sm space-y-3">
-                <div className="card-body">
-                  <div className="card-body p-0">
-                    <h1>{touristSpot.spotNames}</h1>
-                    <h1>{touristSpot.country}</h1>
-                    <h1>{touristSpot.location}</h1>
-                    <h1>{touristSpot.description}</h1>
-                    <h1>{touristSpot.averageCost}</h1>
-                    <h1>{touristSpot.season}</h1>
-                    <h1>{touristSpot.travelTime}</h1>
-                    <h1>{touristSpot.totalVisitors}</h1>
-                    <h1>{touristSpot.email}</h1>
-                    <h1>{touristSpot.name}</h1>
-                  </div>
+              <div
+                key={index}
+                className="h-full text-shadow-xs text-shadow-[#e8ffec5d] hover:scale-105 text-6xl card w-11/12 mx-auto shadow-sm border-2 border-black shadow-amber-600 bg-[#105dc959]"
+              >
+                <div className="card-body p-4 md:p-4">
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td className="py-2 md:p-2 md:text-xl font-medium">
+                          Country Name
+                        </td>
+                        <td className="md:text-lg font-extralight">
+                          :{" "}
+                          {touristSpot?.country &&
+                            touristSpot?.country.charAt(0).toUpperCase() +
+                              touristSpot?.country.slice(1)}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 md:p-2 md:text-xl font-medium">
+                          Location
+                        </td>
+                        <td className="md:text-lg font-extralight">
+                          : {touristSpot?.location}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 md:p-2 md:text-xl font-medium">
+                          Average Cost
+                        </td>
+                        <td className="md:text-lg font-extralight">
+                          : {touristSpot?.averageCost} ৳
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 md:p-2 md:text-xl font-medium">
+                          Season
+                        </td>
+                        <td className="md:text-lg font-extralight">
+                          : {touristSpot?.season}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 md:p-2 md:text-xl font-medium">
+                          Travel Time
+                        </td>
+                        <td className="md:text-lg font-extralight">
+                          : {touristSpot?.travelTime} Days.
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 md:p-2 md:text-xl font-medium">
+                          Total Visitors
+                        </td>
+                        <td className="md:text-lg font-extralight">
+                          : {touristSpot?.totalVisitors}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 md:p-2 md:text-xl font-medium">
+                          Description
+                        </td>
+                        <td className="md:text-lg font-extralight">
+                          :{" "}
+                          {touristSpot?.description.length > 20
+                            ? touristSpot?.description.slice(0, 20)
+                            : touristSpot?.description}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
                 </div>
 
                 <figure>
                   <img src={touristSpot.photoURL} alt={touristSpot.name} />
                 </figure>
 
-                <div>
+                <div className="w-11/12 mx-auto mb-4">
                   <button
                     className="btn"
                     onClick={() => {
@@ -190,10 +246,12 @@ const MyList = () => {
                   >
                     Delete
                   </button>
+
+                  <NavLink to={`/viewDetails/${touristSpot._id} `} key={index}>
+                    <button className="btn btn-primary">View Details</button>
+                  </NavLink>
                 </div>
-                <NavLink to={`/viewDetails/${touristSpot._id} `} key={index}>
-                  <button className="btn btn-primary">View Details</button>
-                </NavLink>
+
                 {/* Modal here... */}
                 <dialog id="my_modal_1" className="modal ">
                   <div className="modal-box w-full">

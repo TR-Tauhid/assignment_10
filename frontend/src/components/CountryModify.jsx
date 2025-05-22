@@ -27,7 +27,6 @@ const CountryModify = () => {
       uid: user?.uid,
     };
 
-    console.log(countryDetails);
     await fetch("http://localhost:5000/countries", {
       method: "POST",
       headers: { "Content-Type": "Application/json" },
@@ -78,7 +77,7 @@ const CountryModify = () => {
         swal("Your tourist spot info is safe!");
       }
     } catch (err) {
-      console.log(err);
+      notify(err, "error");
     }
   };
 
@@ -154,17 +153,15 @@ const CountryModify = () => {
         swal("Your tourist spot info is safe!");
       }
     } catch (err) {
-      console.log(err);
+      notify(err, "error");
     }
   };
 
   const handleSort = (sortOption) => {
     if (sortOption === "averageCost") {
-      console.log("sorted country data", countryData);
       const sortedCountryData = [...countryData].sort((a, b) => {
         return a.averageCost - b.averageCost;
       });
-      console.log("sorted country data", sortedCountryData);
       setCountryData(sortedCountryData);
     }
     if (sortOption === "country") {
@@ -178,15 +175,20 @@ const CountryModify = () => {
   if (loading) {
     return <LoadingPage></LoadingPage>;
   }
+  
   return (
-    <div>
+    <div className="w-11/12 mx-auto ">
       {/* Adding a Country Spot here */}
 
-      <h1>Add a Country Spot Details</h1>
+      <div className="md:text-3xl text-center my-4 md:my-8">
+        <h1>Add a Country Spot Details </h1>
+      </div>
+
+      {/* Adding country form */}
       <div>
         <details className="collapse  border-base-300 border">
-          <summary className="collapse-title font-semibold">
-            Add a Traveling destination of a South East Asian Countries.
+          <summary className="collapse-title font-semibold text-center text-2xl">
+            Add a Traveling destination of a South East Asian Countries. ⬇️
           </summary>
           <div className="collapse-content text-sm">
             <form
@@ -303,20 +305,20 @@ const CountryModify = () => {
 
       {/* Sorting Section here... */}
 
-      <div>
+      <div className="text-center my-4">
         <div className="dropdown dropdown-start">
           <div tabIndex={0} role="button" className="btn m-1">
             Click ⬇️
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content menu  rounded-box z-1 w-52 p-2 shadow-sm"
+            className="dropdown-content menu  rounded-box z-1 w-52 p-2 shadow-sm gap-y-2"
           >
             <li>
-              <a onClick={() => handleSort("averageCost")}>Average Cost</a>
+              <a className="bg-blur border-2 border-black" onClick={() => handleSort("averageCost")}>Average Cost</a>
             </li>
             <li>
-              <a onClick={() => handleSort("country")}>Country</a>
+              <a className="bg-blur border-2 border-black" onClick={() => handleSort("country")}>Country</a>
             </li>
           </ul>
         </div>
@@ -324,31 +326,82 @@ const CountryModify = () => {
 
       {/* Show Countries tourist spot list... */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-14">
         {countryData?.map((countrySpot, index) => (
-          <div key={index}>
-            <div key={index} className="card  w-96 shadow-sm">
-              <div>
-                <div className="card-body">
-                  <h1>{countrySpot.spotNames}</h1>
-                  <h1>
-                    {countrySpot.country &&
-                      countrySpot.country.charAt(0).toUpperCase() +
-                        countrySpot.country.slice(1)}
-                  </h1>
-                  <h1>{countrySpot.location}</h1>
-                  <h1>{countrySpot.description}</h1>
-                  <h1>{countrySpot.averageCost}</h1>
-                  <h1>{countrySpot.season}</h1>
-                  <h1>{countrySpot.travelTime}</h1>
-                  <h1>{countrySpot.email}</h1>
-                  <h1>{countrySpot.name}</h1>
-                </div>
-
-                <figure>
-                  <img src={countrySpot.photoURL} alt={countrySpot.name} />
-                </figure>
-              </div>
+          <div
+            key={index}
+            className="h-full text-shadow-xs text-shadow-[#e8ffec5d] hover:scale-105 text-6xl card w-11/12 mx-auto shadow-sm border-2 border-black shadow-amber-600 bg-[#105dc959]"
+          >
+            <div key={index} className="card-body shadow-sm">
+              <h1 className="w-full text-center text-3xl">
+                {countrySpot?.spotNames.charAt(0).toUpperCase() + countrySpot?.spotNames.slice(1)}
+              </h1>
+              <table>
+                <tbody>
+                  <tr>
+                    <td className="md:pl-8 md:p-2 md:text-xl font-medium">
+                      Country Name
+                    </td>
+                    <td className="md:text-lg font-extralight">
+                      :{" "}
+                      {countrySpot?.country &&
+                        countrySpot?.country.charAt(0).toUpperCase() +
+                          countrySpot?.country.slice(1)}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="md:pl-8 md:p-2 md:text-xl font-medium">
+                      Location
+                    </td>
+                    <td className="md:text-lg font-extralight">
+                      : {countrySpot?.location}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="md:pl-8 md:p-2 md:text-xl font-medium">
+                      Average Cost
+                    </td>
+                    <td className="md:text-lg font-extralight">
+                      : {countrySpot?.averageCost} ৳
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="md:pl-8 md:p-2 md:text-xl font-medium">
+                      Season
+                    </td>
+                    <td className="md:text-lg font-extralight">
+                      : {countrySpot?.season}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="md:pl-8 md:p-2 md:text-xl font-medium">
+                      Travel Time
+                    </td>
+                    <td className="md:text-lg font-extralight">
+                      : {countrySpot?.travelTime} Days.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="md:pl-8 md:p-2 md:text-xl font-medium">
+                      Total Visitors
+                    </td>
+                    <td className="md:text-lg font-extralight">
+                      : {countrySpot?.totalVisitors}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="md:pl-8 md:p-2 md:text-xl font-medium">
+                      Description
+                    </td>
+                    <td className="md:text-lg font-extralight">
+                      :{" "}
+                      {countrySpot?.description.length > 20
+                        ? countrySpot?.description.slice(0, 20)
+                        : countrySpot?.description}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
 
               {/*Updating Modal here... */}
 
@@ -491,7 +544,7 @@ const CountryModify = () => {
                 </dialog>
               </div>
             </div>
-            <div>
+            <div className="w-11/12 mx-auto mb-4">
               <NavLink to={`/viewDetails/${countrySpot?._id} `}>
                 <button className="btn btn-primary">View Details</button>
               </NavLink>

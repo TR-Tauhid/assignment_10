@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @plugin "daisyui";
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
 
 * {
   font-family: "Jua", sans-serif;
@@ -27,6 +29,10 @@ select,
 textarea,
 button {
   width: 100%;
+}
+
+.bg-blur {
+  backdrop-filter: blur(8px);
 }
 
 /* Error Page Styles here */
