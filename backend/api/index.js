@@ -1,4 +1,4 @@
-import express, { response } from "express";
+import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
@@ -7,8 +7,12 @@ const app = express();
 app.use(cors({ origin: true }));
 dotenv.config();
 app.use(express.json());
-
 const PORT = process.env.PORT || 5000;
+
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
 
 const dbUser = process.env.DB_USER;
 const dbPassword = process.env.DB_PASSWORD;
@@ -118,10 +122,10 @@ async function run() {
     });
 
     if (data) {
-      return res.status(200).json(data); 
+      return res.status(200).json(data);
     }
 
-    return res.status(404).json({ message: "Data not found" }); 
+    return res.status(404).json({ message: "Data not found" });
 
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -160,7 +164,6 @@ async function run() {
     app.patch("/countries/:id", async (req, res) => {
       const id = req.params.id;
       const updateCountrySpotDetail = req.body;
-      console.log(updateCountrySpotDetail);
       const filter = { _id: new ObjectId(id) };
       const option = { upsert: false };
       const item = {
@@ -171,7 +174,7 @@ async function run() {
       const result = await countriesSpotCollection.updateOne(
         filter,
         item,
-        updateCountrySpotDetail
+        option
       );
       res.status(200).send(result);
     });
@@ -188,5 +191,5 @@ async function run() {
   }
 }
 run().catch(console.dir);
-
-module.exports = app;
+// app.listen(PORT, () => console.log(`Server is running at ${PORT}`));
+export default app;
