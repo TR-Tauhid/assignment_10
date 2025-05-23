@@ -49,7 +49,9 @@ app.post("/addTouristSpot", async (req, res) => {
     const collection = db.collection("touristSpots");
     const result = await collection.insertOne(req.body);
     result.acknowledged
-      ? res.status(201).json({ message: "Added", insertedId: result.insertedId })
+      ? res
+          .status(201)
+          .json({ message: "Added", insertedId: result.insertedId })
       : res.status(500).json({ message: "Insert failed" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -74,11 +76,13 @@ app.delete("/myList/:id", async (req, res) => {
 });
 
 app.patch("/myList/:id", async (req, res) => {
-  const result = await db.collection("touristSpots").updateOne(
-    { _id: new ObjectId(req.params.id) },
-    { $set: req.body },
-    { upsert: false }
-  );
+  const result = await db
+    .collection("touristSpots")
+    .updateOne(
+      { _id: new ObjectId(req.params.id) },
+      { $set: req.body },
+      { upsert: false }
+    );
   res.status(200).json(result);
 });
 
@@ -100,7 +104,9 @@ app.post("/countries", async (req, res) => {
   try {
     const result = await db.collection("countriesSpots").insertOne(req.body);
     result.acknowledged
-      ? res.status(201).json({ message: "Added", insertedId: result.insertedId })
+      ? res
+          .status(201)
+          .json({ message: "Added", insertedId: result.insertedId })
       : res.status(500).json({ message: "Insert failed" });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -113,11 +119,13 @@ app.get("/countries", async (req, res) => {
 });
 
 app.patch("/countries/:id", async (req, res) => {
-  const result = await db.collection("countriesSpots").updateOne(
-    { _id: new ObjectId(req.params.id) },
-    { $set: req.body },
-    { upsert: false }
-  );
+  const result = await db
+    .collection("countriesSpots")
+    .updateOne(
+      { _id: new ObjectId(req.params.id) },
+      { $set: req.body },
+      { upsert: false }
+    );
   res.status(200).json(result);
 });
 
@@ -139,5 +147,7 @@ connectToDB()
     console.error("❌ Failed to connect to DB", err);
     process.exit(1);
   });
-
-export default app;
+export default async function handler(req, res) {
+  await connectToDB();
+  app(req, res);
+}
