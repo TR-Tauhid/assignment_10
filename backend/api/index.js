@@ -3,24 +3,16 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
 
-const app = express();
-app.use(cors({ origin: true }));
 dotenv.config();
-app.use(express.json());
+
+const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
+app.use(cors({ origin: true }));
+app.use(express.json());
 
-const dbUser = process.env.DB_USER;
-const dbPassword = process.env.DB_PASSWORD;
-const dbName = process.env.DB_NAME;
-
-// MongoDB functions here...
-
-const uri = `mongodb+srv://${dbUser}:${dbPassword}@assignmenttencluster.h7hk2wy.mongodb.net/?retryWrites=true&w=majority&appName=assignmentTenCluster`;
+// MongoDB connection
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@assignmenttencluster.h7hk2wy.mongodb.net/?retryWrites=true&w=majority&appName=assignmentTenCluster`;
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -31,165 +23,121 @@ const client = new MongoClient(uri, {
 });
 
 let db;
-async function run() {
-  try {
+
+async function connectToDB() {
+  if (!db) {
     await client.connect();
-    await client.db("admin").command({ ping: 1 });
+    db = client.db(process.env.DB_NAME);
+    console.log("✅ Connected to MongoDB");
+  }
+}
 
-    app.get("/", (req, res) => {
-      res.send("Server is running...");
-    });
+// Middleware to log requests
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
 
-    db = client.db(dbName);
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+// Health check
+app.get("/", (req, res) => {
+  res.send("🌍 Server is running...");
+});
 
-    const touristSpotCollection = db.collection("touristSpots");
-    const countriesSpotCollection = db.collection("countriesSpots");
-
-    // CURD operation of tourists spots here...
-
-    app.post("/addTouristSpot", async (req, res) => {
-      const touristDetails = req.body;
-      const result = await touristSpotCollection.insertOne(touristDetails);
-      if (result.acknowledged) {
-        res.status(201).json({
-          message: "Tourist spot added successfully",
-          insertedId: result.insertedId,
-          touristDetails: touristDetails,
-        });
-      } else {
-        res.status(500).json({ message: "Failed to add tourist spot" });
-      }
-    });
-
-    app.get("/allTouristSpot", async (req, res) => {
-      const allTouristSpotData = await db
-        .collection("touristSpots")
-        .find({})
-        .toArray();
-      res.status(200).json(allTouristSpotData);
-    });
-
-    app.get("/myList", async (req, res) => {
-      const allTouristSpotData = await db
-        .collection("touristSpots")
-        .find({})
-        .toArray();
-      res.status(200).json(allTouristSpotData);
-    });
-
-    app.delete("/myList/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await touristSpotCollection.deleteOne(query);
-      res.status(200).send(result);
-    });
-
-    app.patch("/myList/:id", async (req, res) => {
-      const id = req.params.id;
-      const updatedTouristSpot = req.body;
-      const filter = { _id: new ObjectId(id) };
-      const option = { upsert: false };
-      const item = {
-        $set: {
-          ...updatedTouristSpot,
-        },
-      };
-      const result = await touristSpotCollection.updateOne(
-        filter,
-        item,
-        option
-      );
-      res.send(result);
-    });
-
-   app.get("/viewDetails/:id", async (req, res) => {
-  const id = req.params.id;
-
+// Tourist Spot APIs
+app.post("/addTouristSpot", async (req, res) => {
   try {
-    let data = await touristSpotCollection.findOne({
-      _id: new ObjectId(id),
-    });
-
-    if (data) {
-      return res.status(200).json(data);
-    }
-
-    data = await countriesSpotCollection.findOne({
-      _id: new ObjectId(id),
-    });
-
-    if (data) {
-      return res.status(200).json(data);
-    }
-
-    return res.status(404).json({ message: "Data not found" });
-
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return res
-      .status(500)
-      .json({ message: "An error occurred while fetching data." });
+    const collection = db.collection("touristSpots");
+    const result = await collection.insertOne(req.body);
+    result.acknowledged
+      ? res.status(201).json({ message: "Added", insertedId: result.insertedId })
+      : res.status(500).json({ message: "Insert failed" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
-    // CURD operation of Countries here...
+app.get("/allTouristSpot", async (req, res) => {
+  const data = await db.collection("touristSpots").find({}).toArray();
+  res.status(200).json(data);
+});
 
-    app.post("/countries", async (req, res) => {
-      const countryDetails = req.body;
-      const result = await countriesSpotCollection.insertOne(countryDetails);
-      if (result.acknowledged) {
-        res.status(201).json({
-          message: "Country traveling spot added successfully",
-          insertedId: result.insertedId,
-          countryDetails: countryDetails,
-        });
-      } else {
-        res
-          .status(500)
-          .json({ message: "Failed to add country traveling spot" });
-      }
-    });
+app.get("/myList", async (req, res) => {
+  const data = await db.collection("touristSpots").find({}).toArray();
+  res.status(200).json(data);
+});
 
-    app.get("/countries", async (req, res) => {
-      const allCountriesSpotData = await db
-        .collection("countriesSpots")
-        .find({})
-        .toArray();
-      res.status(200).json(allCountriesSpotData);
-    });
+app.delete("/myList/:id", async (req, res) => {
+  const result = await db
+    .collection("touristSpots")
+    .deleteOne({ _id: new ObjectId(req.params.id) });
+  res.status(200).json(result);
+});
 
-    app.patch("/countries/:id", async (req, res) => {
-      const id = req.params.id;
-      const updateCountrySpotDetail = req.body;
-      const filter = { _id: new ObjectId(id) };
-      const option = { upsert: false };
-      const item = {
-        $set: {
-          ...updateCountrySpotDetail,
-        },
-      };
-      const result = await countriesSpotCollection.updateOne(
-        filter,
-        item,
-        option
-      );
-      res.status(200).send(result);
-    });
+app.patch("/myList/:id", async (req, res) => {
+  const result = await db.collection("touristSpots").updateOne(
+    { _id: new ObjectId(req.params.id) },
+    { $set: req.body },
+    { upsert: false }
+  );
+  res.status(200).json(result);
+});
 
-    app.delete("/countries/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await countriesSpotCollection.deleteOne(query);
-      res.status(200).send(result);
-    });
-  } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
-    await client.close();
+app.get("/viewDetails/:id", async (req, res) => {
+  const id = new ObjectId(req.params.id);
+  let data = await db.collection("touristSpots").findOne({ _id: id });
+
+  if (!data) {
+    data = await db.collection("countriesSpots").findOne({ _id: id });
   }
-}
-run().catch(console.dir);
-// app.listen(PORT, () => console.log(`Server is running at ${PORT}`));
+
+  data
+    ? res.status(200).json(data)
+    : res.status(404).json({ message: "Data not found" });
+});
+
+// Country APIs
+app.post("/countries", async (req, res) => {
+  try {
+    const result = await db.collection("countriesSpots").insertOne(req.body);
+    result.acknowledged
+      ? res.status(201).json({ message: "Added", insertedId: result.insertedId })
+      : res.status(500).json({ message: "Insert failed" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/countries", async (req, res) => {
+  const data = await db.collection("countriesSpots").find({}).toArray();
+  res.status(200).json(data);
+});
+
+app.patch("/countries/:id", async (req, res) => {
+  const result = await db.collection("countriesSpots").updateOne(
+    { _id: new ObjectId(req.params.id) },
+    { $set: req.body },
+    { upsert: false }
+  );
+  res.status(200).json(result);
+});
+
+app.delete("/countries/:id", async (req, res) => {
+  const result = await db
+    .collection("countriesSpots")
+    .deleteOne({ _id: new ObjectId(req.params.id) });
+  res.status(200).json(result);
+});
+
+// Connect to DB and start server
+connectToDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ Failed to connect to DB", err);
+    process.exit(1);
+  });
+
 export default app;
