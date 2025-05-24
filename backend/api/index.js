@@ -32,10 +32,7 @@ async function run() {
   }
 }
 
-// Health check
-app.get("/", (req, res) => {
-  res.send("Server is running...");
-});
+
 
 // Tourist Spot APIs
 app.post("/addTouristSpot", async (req, res) => {
@@ -133,3 +130,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Server is running at ${PORT}`));
+
+export default app;
