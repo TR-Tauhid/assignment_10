@@ -24,7 +24,7 @@ const client = new MongoClient(uri, {
 
 let db;
 
-async function connectToDB() {
+async function run() {
   if (!db) {
     await client.connect();
     db = client.db(process.env.DB_NAME);
@@ -34,7 +34,7 @@ async function connectToDB() {
 
 // Health check
 app.get("/", (req, res) => {
-  res.send("🌍 Server is running...");
+  res.send("Server is running...");
 });
 
 // Tourist Spot APIs
@@ -124,15 +124,12 @@ app.delete("/countries/:id", async (req, res) => {
   res.status(200).json(result);
 });
 
-// Connect to DB and start server
-connectToDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error("Failed to connect to DB", err);
-    process.exit(1);
-  });
 
+
+run().catch(console.dir);
+
+app.get("/", (req, res) => {
+  res.send("Hey there...!!! Server is running...!!!");
+});
+
+app.listen(port, () => console.log(`Server is running at ${port}`));
