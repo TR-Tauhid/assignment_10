@@ -132,4 +132,6 @@ app.get("/", (req, res) => {
   res.send("Hey there...!!! Server is running...!!!");
 });
 
-app.listen(port, () => console.log(`Server is running at ${port}`));
+app.listen(PORT, () => console.log(`Server is running at ${PORT}`));
+
+module.exports = app;
