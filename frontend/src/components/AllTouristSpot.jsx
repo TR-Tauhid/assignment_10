@@ -10,23 +10,9 @@ const AllTouristSpot = () => {
   const { notify, loading } = useAuth();
   const [touristSpots, setTouristSpots] = useState([]);
 
-  
-  const handleCountrySpots = async () => {
+  const handleAllSpotsData = async () => {
     try {
-      const res = await fetch("http://localhost:5000/countries");
-      const data = await res.json();
-      if (res.ok) {
-        setTouristSpots(touristSpots, ...data);
-      } else {
-        console.error("Error fetching tourist spots:", data.message);
-      }
-    } catch (error) {
-      notify("Error fetching tourist spots:", error.message);
-    }
-  };
-  const handleTouristSpots = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/allTouristSpot",);
+      const res = await fetch("http://localhost:5000/allTouristSpot");
       const data = await res.json();
       if (res.ok) {
         setTouristSpots(data);
@@ -34,7 +20,7 @@ const AllTouristSpot = () => {
         console.error("Error fetching tourist spots:", data.message);
       }
     } catch (error) {
-      notify(`Error fetching tourist spots:, ${error.message}`, "error");
+      notify("Error fetching tourist spots:", error.message);
     }
   };
 
@@ -53,8 +39,7 @@ const AllTouristSpot = () => {
   };
 
   useEffect(() => {
-    handleTouristSpots();
-    handleCountrySpots();
+    handleAllSpotsData();
   });
 
   if (loading) {

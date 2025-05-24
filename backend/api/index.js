@@ -28,15 +28,9 @@ async function connectToDB() {
   if (!db) {
     await client.connect();
     db = client.db(process.env.DB_NAME);
-    console.log("✅ Connected to MongoDB");
+    console.log("Pinged to MongoDB");
   }
 }
-
-// Middleware to log requests
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
 
 // Health check
 app.get("/", (req, res) => {
@@ -57,7 +51,9 @@ app.post("/addTouristSpot", async (req, res) => {
 });
 
 app.get("/allTouristSpot", async (req, res) => {
-  const data = await db.collection("touristSpots").find({}).toArray();
+  const dataFromTouristsCollection = await db.collection("touristSpots").find({}).toArray();
+  const dataFromCountriesCollection = await db.collection("countriesSpots").find({}).toArray();
+  const data = [...dataFromTouristsCollection, ...dataFromCountriesCollection]
   res.status(200).json(data);
 });
 
@@ -132,12 +128,12 @@ app.delete("/countries/:id", async (req, res) => {
 connectToDB()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`🚀 Server is running on port ${PORT}`);
+      console.log(`Server is running on port ${PORT}`);
     });
   })
   .catch((err) => {
-    console.error("❌ Failed to connect to DB", err);
+    console.error("Failed to connect to DB", err);
     process.exit(1);
   });
 
-module.exports = app;
+export default app;
