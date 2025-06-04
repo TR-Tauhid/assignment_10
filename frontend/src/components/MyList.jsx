@@ -62,7 +62,7 @@ const MyList = () => {
       });
       if (willUpdate) {
         const res = await fetch(
-          `http://localhost:5000/myList/${editTouristSpot._id}`,
+          `https://cholo-backend.vercel.app/myList/${editTouristSpot._id}`,
           {
             method: "PATCH",
             headers: {
@@ -115,7 +115,7 @@ const MyList = () => {
         dangerMode: true,
       });
       if (willDelete) {
-        const res = await fetch(`http://localhost:5000/myList/${id}`, {
+        const res = await fetch(`https://cholo-backend.vercel.app/myList/${id}`, {
           method: "DELETE",
         });
         const data = await res.json();

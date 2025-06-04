@@ -27,7 +27,7 @@ const CountryModify = () => {
       uid: user?.uid,
     };
 
-    await fetch("http://localhost:5000/countries", {
+    await fetch("https://cholo-backend.vercel.app/countries", {
       method: "POST",
       headers: { "Content-Type": "Application/json" },
       body: JSON.stringify(countryDetails),
@@ -61,7 +61,7 @@ const CountryModify = () => {
         dangerMode: true,
       });
       if (willDelete) {
-        const res = await fetch(`http://localhost:5000/countries/${id}`, {
+        const res = await fetch(`https://cholo-backend.vercel.app/countries/${id}`, {
           method: "DELETE",
         });
         const data = await res.json();
@@ -124,7 +124,7 @@ const CountryModify = () => {
       });
       if (willUpdate) {
         const res = await fetch(
-          `http://localhost:5000/countries/${editingSpot._id}`,
+          `https://cholo-backend.vercel.app/countries/${editingSpot._id}`,
           {
             method: "PATCH",
             headers: { "Content-Type": "Application/json" },

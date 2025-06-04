@@ -6,8 +6,6 @@ import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
 dotenv.config();
 
 const app = express();
-// Vercel handles the PORT automatically, so we remove app.listen() and PORT constant here.
-// const PORT = process.env.PORT || 5000;
 
 app.use(cors({ origin: true }));
 app.use(express.json());

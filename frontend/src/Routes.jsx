@@ -24,7 +24,7 @@ let router = createBrowserRouter([
         index: true,
         loader: async () => {
           try {
-            const res = await fetch("http://localhost:5000/countries", {
+            const res = await fetch("https://cholo-backend.vercel.app/countries", {
               method: "GET",
             });
             if (!res.ok) {
@@ -67,7 +67,7 @@ let router = createBrowserRouter([
         path: "/myList",
         loader: async () => {
           try {
-            const res = await fetch(`http://localhost:5000/myList/`);
+            const res = await fetch(`https://cholo-backend.vercel.app/myList/`);
             if (!res.ok) {
               const errorData = await res.json().catch(() => ({
                 message: res.statusText || "Unknown server error",
@@ -93,7 +93,7 @@ let router = createBrowserRouter([
         loader: async ({ params }) => {
           try {
             const res = await fetch(
-              `http://localhost:5000/viewDetails/${params.id}`
+              `https://cholo-backend.vercel.app/viewDetails/${params.id}`
             );
             if (!res.ok) {
               const errorData = await res.json().catch(() => ({
@@ -115,7 +115,7 @@ let router = createBrowserRouter([
         path: "/countries",
         loader: async () => {
           try {
-            const res = await fetch(`http://localhost:5000/countries/`);
+            const res = await fetch(`https://cholo-backend.vercel.app/countries/`);
             if (!res.ok) {
               const errorData = await res.json().catch(() => ({
                 message: res.statusText || "Unknown server error",

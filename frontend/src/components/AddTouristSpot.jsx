@@ -25,7 +25,7 @@ const AddTouristSpot = () => {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/addTouristSpot", {
+      const res = await fetch("https://cholo-backend.vercel.app/addTouristSpot", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

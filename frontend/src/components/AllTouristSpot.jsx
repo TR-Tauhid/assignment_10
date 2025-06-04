@@ -12,7 +12,7 @@ const AllTouristSpot = () => {
 
   const handleAllSpotsData = async () => {
     try {
-      const res = await fetch("http://localhost:5000/allTouristSpot");
+      const res = await fetch("https://cholo-backend.vercel.app/allTouristSpot");
       const data = await res.json();
       if (res.ok) {
         setTouristSpots(data);
