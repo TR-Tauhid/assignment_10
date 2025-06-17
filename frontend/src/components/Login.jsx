@@ -5,7 +5,7 @@ import LoadingPage from "./LoadingPage";
 
 
 const Login = () => {
-  const navigete = useNavigate();
+  const navigate = useNavigate();
 
   const { signInWithEmailPass, googleSignIn, facebookSignIn, notify, loading } =
     useAuth();
@@ -17,7 +17,7 @@ const Login = () => {
     const password = form.get("password");
     signInWithEmailPass(email, password)
       .then(() => {
-        navigete("/");
+        navigate("/");
         notify("Login Successful...!!!", "success");
       })
       .catch((error) => {

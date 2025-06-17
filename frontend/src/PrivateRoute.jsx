@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import LoadingPage from "./components/LoadingPage";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "../src/context/AuthContext";
 
 const PrivateRoute = ({children}) => {
