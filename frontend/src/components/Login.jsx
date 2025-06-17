@@ -37,7 +37,7 @@ const Login = () => {
   const handleFacebookBtn = () => {
     facebookSignIn()
       .then(() => {
-        navigete(-1);
+        navigate(-1);
         notify("Login Successful...!!!", "success");
       })
       .catch((error) => notify(error.message, "error"));
