@@ -28,7 +28,7 @@ const Login = () => {
   const handleGoogleBtn = () => {
     googleSignIn()
       .then(() => {
-        navigete(-1);
+        navigate(-1);
         notify("Login Successful...!!!", "success");
       })
       .catch((error) => notify(error.message, "error"));
